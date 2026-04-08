@@ -68,7 +68,7 @@ const siteConfig: SiteConfig = {
     },
     website: 'https://chrisputa.github.io/',
     base: '/exercise_nutrition_immune_function/',
-    title: 'Exercise Nutrition & Immune Function',
+    title: 'Exercise, Nutrition & Immune Function',
     author: {
         name: 'Christian Puta',
         url: 'https://chrisputa.github.io/'
