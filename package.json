@@ -1,13 +1,13 @@
 {
-    "name": "applied_sportsmedicine",
+    "name": "exercise_nutrition_immune_function",
     "type": "module",
     "description": "",
     "license": "CC-BY-4.0",
     "author": "CHRISTIAN PUTA",
-    "homepage": "https://chrisputa.github.io/applied_sportsmedicine", 
+    "homepage": "https://chrisputa.github.io/exercise_nutrition_immune_function", 
     "repository": {
         "type": "git",
-        "url": "https://github.com/chrisputa/applied_sportsmedicine",
+        "url": "https://github.com/chrisputa/exercise_nutrition_immune_function",
         "version": "1.0.0"
     },
     "scripts": {
