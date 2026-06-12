@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz - Exercise Nutrition Immune Function</title>
+<style>
+  :root{
+    --rot:#A5132B;
+    --rot-d:#7d0e20;
+    --ink:#1a1a1a;
+    --grey-1:#f5f5f4;
+    --grey-2:#e7e5e4;
+    --grey-3:#c8c5c2;
+    --grey-4:#8a8784;
+    --grey-5:#56524f;
+    --ok:#2f6e3b;
+    --ok-bg:#eaf3eb;
+    --no:#A5132B;
+    --no-bg:#fbecee;
+    --paper:#ffffff;
+    --radius:4px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:transparent;
+    line-height:1.55;
+  }
+  .wrap{max-width:none;margin:0;padding:0;}
+  header.top{
+    border-bottom:3px solid var(--rot);
+    padding-bottom:14px;margin-bottom:24px;
+  }
+  header.top .kicker{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--rot);font-weight:700;margin:0 0 4px;
+  }
+  header.top h1{font-size:24px;margin:0;font-weight:700;letter-spacing:-.01em;}
+  header.top .sub{color:var(--grey-5);font-size:14px;margin-top:4px;}
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--grey-2);
+    border-radius:var(--radius);
+    padding:26px;
+  }
+
+  /* Start screen */
+  .lead{font-size:15px;color:var(--grey-5);margin:0 0 20px;}
+  .opts-grid{display:grid;gap:14px;margin:18px 0 24px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;}
+  select,input[type=number]{
+    width:100%;padding:9px 10px;border:1px solid var(--grey-3);
+    border-radius:var(--radius);font-size:15px;background:#fff;color:var(--ink);
+  }
+  .row{display:flex;gap:14px;flex-wrap:wrap;}
+  .row>.field{flex:1;min-width:160px;}
+  .check{display:flex;align-items:center;gap:9px;font-size:14px;cursor:pointer;}
+  .check input{width:17px;height:17px;accent-color:var(--rot);}
+
+  .btn{
+    display:inline-block;border:none;cursor:pointer;
+    background:var(--rot);color:#fff;font-size:15px;font-weight:600;
+    padding:12px 22px;border-radius:var(--radius);
+    transition:background .15s;
+  }
+  .btn:hover{background:var(--rot-d);}
+  .btn:focus-visible{outline:3px solid var(--rot);outline-offset:2px;}
+  .btn.ghost{background:#fff;color:var(--rot);border:1px solid var(--rot);}
+  .btn.ghost:hover{background:var(--no-bg);}
+  .btn.grey{background:var(--grey-2);color:var(--ink);}
+  .btn.grey:hover{background:var(--grey-3);}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+
+  /* Quiz screen */
+  .meta-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:13px;color:var(--grey-5);margin-bottom:10px;
+  }
+  .tags{display:flex;gap:6px;}
+  .tag{
+    font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;
+    padding:2px 8px;border-radius:99px;background:var(--grey-2);color:var(--grey-5);
+  }
+  .tag.lvl{color:#fff;}
+  .tag.lvl1{background:var(--grey-4);}
+  .tag.lvl2{background:var(--grey-5);}
+  .tag.lvl3{background:var(--rot);}
+  .timer{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink);}
+  .progress{height:5px;background:var(--grey-2);border-radius:99px;overflow:hidden;margin-bottom:18px;}
+  .progress>span{display:block;height:100%;background:var(--rot);width:0;transition:width .25s;}
+  .qtext{font-size:18px;font-weight:600;margin:0 0 18px;line-height:1.4;}
+  .answers{display:grid;gap:10px;}
+  .ans{
+    text-align:left;width:100%;cursor:pointer;
+    background:#fff;border:1px solid var(--grey-3);border-radius:var(--radius);
+    padding:13px 15px;font-size:15px;color:var(--ink);
+    display:flex;gap:12px;align-items:flex-start;transition:border-color .12s,background .12s;
+  }
+  .ans:hover:not(:disabled){border-color:var(--rot);}
+  .ans:focus-visible{outline:3px solid var(--rot);outline-offset:2px;}
+  .ans .letter{
+    flex:0 0 auto;font-weight:700;color:var(--grey-4);
+    width:22px;height:22px;border:1px solid var(--grey-3);border-radius:99px;
+    display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:1px;
+  }
+  .ans.correct{background:var(--ok-bg);border-color:var(--ok);}
+  .ans.correct .letter{background:var(--ok);color:#fff;border-color:var(--ok);}
+  .ans.wrong{background:var(--no-bg);border-color:var(--no);}
+  .ans.wrong .letter{background:var(--no);color:#fff;border-color:var(--no);}
+  .ans:disabled{cursor:default;}
+  .feedback{margin-top:16px;font-size:14px;min-height:24px;}
+  .feedback .fb-ok{color:var(--ok);font-weight:600;}
+  .feedback .fb-no{color:var(--no);font-weight:600;}
+  .navbtns{margin-top:22px;display:flex;justify-content:flex-end;}
+
+  /* Results */
+  .scorebox{
+    display:flex;gap:18px;flex-wrap:wrap;margin:4px 0 24px;
+  }
+  .stat{
+    flex:1;min-width:130px;border:1px solid var(--grey-2);border-radius:var(--radius);
+    padding:16px;text-align:center;background:#fff;
+  }
+  .stat .num{font-size:30px;font-weight:700;line-height:1;}
+  .stat .num.accent{color:var(--rot);}
+  .stat .lbl{font-size:12px;color:var(--grey-5);margin-top:6px;text-transform:uppercase;letter-spacing:.06em;}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+  th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--grey-2);}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--grey-5);font-weight:700;}
+  td.c{text-align:center;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:99px;}
+  .dot.ok{background:var(--ok);}
+  .dot.no{background:var(--no);}
+  .result-actions{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;}
+  .hidden{display:none;}
+  .qcell{max-width:340px;}
+  footer.foot{margin-top:32px;font-size:12px;color:var(--grey-4);text-align:center;}
+  @media (max-width:560px){
+    .card{padding:18px;}
+    .qcell{max-width:none;}
+    table{font-size:12px;}
+    th,td{padding:6px 5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- START -->
+  <section id="start" class="card">
+    <p class="lead">Wähle Umfang und Stufen, dann starte das Quiz. Pro Frage werden Antwortzeit und Ergebnis erfasst. Die Antwortoptionen werden bei jedem Durchlauf neu gemischt.</p>
+    <div class="opts-grid">
+      <div class="row">
+        <div class="field">
+          <label for="levelSel">Schwierigkeit</label>
+          <select id="levelSel">
+            <option value="0">Alle Stufen</option>
+            <option value="1">Nur Stufe 1 – leicht</option>
+            <option value="2">Nur Stufe 2 – mittel</option>
+            <option value="3">Nur Stufe 3 – schwer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="countSel">Anzahl Fragen</label>
+          <input type="number" id="countSel" min="1" value="20">
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="shuffleQ" checked> Fragen in zufälliger Reihenfolge</label>
+      <label class="check"><input type="checkbox" id="instantFb" checked> Sofortiges Feedback nach jeder Antwort</label>
+    </div>
+    <button class="btn" id="startBtn">Quiz starten</button>
+    <p class="sub" id="poolInfo" style="margin-top:14px;"></p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="card hidden">
+    <div class="meta-bar">
+      <div class="tags" id="qtags"></div>
+      <div class="timer" id="qtimer">0,0 s</div>
+    </div>
+    <div class="progress"><span id="progBar"></span></div>
+    <p class="qtext" id="qtext"></p>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="navbtns">
+      <button class="btn" id="nextBtn" disabled>Weiter</button>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="card hidden">
+    <p class="kicker" style="color:var(--rot);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 4px;">Ergebnis</p>
+    <h2 style="margin:0 0 18px;font-size:22px;" id="scoreHead">Auswertung</h2>
+    <div class="scorebox">
+      <div class="stat"><div class="num accent" id="sCorrect">0</div><div class="lbl">richtig</div></div>
+      <div class="stat"><div class="num" id="sPct">0&nbsp;%</div><div class="lbl">Trefferquote</div></div>
+      <div class="stat"><div class="num" id="sTotal">0&nbsp;s</div><div class="lbl">Gesamtzeit</div></div>
+      <div class="stat"><div class="num" id="sAvg">0&nbsp;s</div><div class="lbl">Ø pro Frage</div></div>
+    </div>
+    <table id="resultTable">
+      <thead>
+        <tr><th>#</th><th>Stufe</th><th>Lec.</th><th class="qcell">Frage</th><th class="c">✓/✗</th><th class="num">Zeit</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="result-actions">
+      <button class="btn" id="retryBtn">Neues Quiz</button>
+      <button class="btn ghost" id="csvBtn">Ergebnis als CSV</button>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ============================================================
+   FRAGEN-DATENBANK
+   - Fragen und Optionen sind gegenüber der Klausur umformuliert.
+   - correct = richtige Aussage, wrong = Distraktoren.
+   - Positionen werden zur Laufzeit gemischt (s. buildOptions).
+   ============================================================ */
+const BANK = [
+ {
+  "n": 1,
+  "level": 1,
+  "lec": "L1",
+  "q": "Wie definieren Caspersen et al. den Begriff 'exercise' (Training/Sport) – in Abgrenzung zur körperlichen Aktivität?",
+  "correct": "Als geplante, strukturierte, wiederholte Bewegung mit dem Ziel, die körperliche Fitness zu erhalten oder zu verbessern",
+  "wrong": [
+   "Als jede durch die Skelettmuskulatur erzeugte Bewegung mit Energieverbrauch",
+   "Als jede unbewusste Alltagsbewegung ohne Zielsetzung",
+   "Als ausschließlich aerobe Dauerbelastung",
+   "Als rein mentale Trainingsform ohne Bewegung"
+  ]
+ },
+ {
+  "n": 2,
+  "level": 1,
+  "lec": "L1",
+  "q": "Mit welchem Phänomen wird die vorübergehende Leistungssteigerung über das Ausgangsniveau hinaus nach Belastung und ausreichender Erholung bezeichnet?",
+  "correct": "Superkompensation",
+  "wrong": [
+   "Homöostase",
+   "Dekonditionierung",
+   "Hyperventilation",
+   "Thermogenese"
+  ]
+ },
+ {
+  "n": 3,
+  "level": 1,
+  "lec": "L1",
+  "q": "Welche akute respiratorische Reaktion auf körperliche Belastung ist korrekt?",
+  "correct": "Das Atemminutenvolumen steigt, um die O₂-Aufnahme und CO₂-Abgabe zu erhöhen",
+  "wrong": [
+   "Die Atemfrequenz sinkt, um Energie zu sparen",
+   "Die CO₂-Abgabe wird vollständig eingestellt",
+   "Die Atmung stoppt bis zum Belastungsende",
+   "Das Atemminutenvolumen bleibt unverändert"
+  ]
+ },
+ {
+  "n": 4,
+  "level": 1,
+  "lec": "L1",
+  "q": "Welche Schlafphase wird vorrangig mit der Ausschüttung von Wachstumshormon und körperlicher Regeneration in Verbindung gebracht?",
+  "correct": "Der Tiefschlaf (NREM-Stadium 3, Slow-Wave-Sleep)",
+  "wrong": [
+   "Der REM-Schlaf",
+   "Der Wachzustand",
+   "NREM-Stadium 1",
+   "Die Einschlafphase"
+  ]
+ },
+ {
+  "n": 5,
+  "level": 1,
+  "lec": "L2",
+  "q": "Welche Eigenschaft kennzeichnet die erworbene (adaptive) Immunität?",
+  "correct": "Sie ist spezifisch, reagiert langsamer und bildet ein immunologisches Gedächtnis",
+  "wrong": [
+   "Sie ist unspezifisch und sofort wirksam",
+   "Sie besteht ausschließlich aus Makrophagen und Neutrophilen",
+   "Sie benötigt nie eine vorherige Antigenexposition",
+   "Sie ist die erste physikalische Barriere der Haut"
+  ]
+ },
+ {
+  "n": 6,
+  "level": 1,
+  "lec": "L2",
+  "q": "Welcher Zelltyp dominiert in der späteren Phase der Entzündung und in der Gewebereparatur?",
+  "correct": "Makrophagen (Monozyten)",
+  "wrong": [
+   "Neutrophile Granulozyten",
+   "Erythrozyten",
+   "Thrombozyten",
+   "Osteoklasten"
+  ]
+ },
+ {
+  "n": 7,
+  "level": 1,
+  "lec": "L2",
+  "q": "Welchen physiologischen Brennwert besitzt 1 g Kohlenhydrat?",
+  "correct": "ca. 4,1 kcal/g",
+  "wrong": [
+   "ca. 9,3 kcal/g",
+   "ca. 7,1 kcal/g",
+   "ca. 2,0 kcal/g",
+   "ca. 0,5 kcal/g"
+  ]
+ },
+ {
+  "n": 8,
+  "level": 1,
+  "lec": "L2",
+  "q": "Welche Energiequelle deckt bei maximaler Belastung von etwa 10–30 Sekunden den größten Anteil?",
+  "correct": "Die anaerobe Glykolyse (Laktatbildung)",
+  "wrong": [
+   "Die β-Oxidation der Fettsäuren",
+   "Die aerobe Phosphorylierung von Fettsäuren",
+   "Ausschließlich gespeichertes ATP",
+   "Der Citratzyklus mit vollständiger Oxidation"
+  ]
+ },
+ {
+  "n": 9,
+  "level": 1,
+  "lec": "L2",
+  "q": "Wie viele der 20 proteinogenen Aminosäuren gelten beim Erwachsenen als nicht-essenziell (vom Körper herstellbar)?",
+  "correct": "12",
+  "wrong": [
+   "8",
+   "20",
+   "4",
+   "2"
+  ]
+ },
+ {
+  "n": 10,
+  "level": 1,
+  "lec": "L2",
+  "q": "Was ist das zentrale energiereiche Molekül, das die unmittelbare Energie für die Muskelkontraktion liefert?",
+  "correct": "ATP (Adenosintriphosphat)",
+  "wrong": [
+   "Glykogen",
+   "Glukose",
+   "Laktat",
+   "Cortisol"
+  ]
+ },
+ {
+  "n": 11,
+  "level": 1,
+  "lec": "L3",
+  "q": "Wie lässt sich 1 MET näherungsweise in den Energieverbrauch umrechnen?",
+  "correct": "1 MET ≈ 1 kcal pro kg Körpergewicht und Stunde",
+  "wrong": [
+   "1 MET ≈ 10 kcal pro kg und Stunde",
+   "1 MET ≈ 1 kcal pro kg und Minute",
+   "1 MET ≈ 100 kcal pro Stunde unabhängig vom Gewicht",
+   "1 MET ≈ 1 L O₂ pro Minute"
+  ]
+ },
+ {
+  "n": 12,
+  "level": 1,
+  "lec": "L3",
+  "q": "Welchen respiratorischen Quotienten (RQ) hat die reine Fettverbrennung?",
+  "correct": "ca. 0,70",
+  "wrong": [
+   "1,00",
+   "1,15",
+   "0,90",
+   "0,50"
+  ]
+ },
+ {
+  "n": 13,
+  "level": 1,
+  "lec": "L3",
+  "q": "Welche Komponente stellt bei den meisten Menschen den größten Anteil am Gesamtenergieumsatz dar?",
+  "correct": "Der Grundumsatz (BMR)",
+  "wrong": [
+   "Die nahrungsinduzierte Thermogenese",
+   "Die körperliche Aktivität",
+   "Der Schlaf",
+   "Die Verdauung von Ballaststoffen"
+  ]
+ },
+ {
+  "n": 14,
+  "level": 1,
+  "lec": "L3",
+  "q": "Was beschreibt die VO₂max?",
+  "correct": "Die maximale Rate, mit der der Körper Sauerstoff aufnehmen und verwerten kann",
+  "wrong": [
+   "Die maximale Atemfrequenz in Ruhe",
+   "Den respiratorischen Quotienten bei Erschöpfung",
+   "Die maximale Laktatkonzentration im Blut",
+   "Das maximale Herzschlagvolumen in Ruhe"
+  ]
+ },
+ {
+  "n": 15,
+  "level": 1,
+  "lec": "L7",
+  "q": "Wofür steht die Abkürzung VILPA im Kontext der Exercise Snacks?",
+  "correct": "Vigorous Intermittent Lifestyle Physical Activity",
+  "wrong": [
+   "Variable Intensity Long Period Activity",
+   "Voluntary Isometric Low-Power Action",
+   "Ventilatory Index of Light Physical Activity",
+   "Vascular Immune-Linked Physical Adaptation"
+  ]
+ },
+ {
+  "n": 16,
+  "level": 1,
+  "lec": "L7",
+  "q": "Welche Dauer ist für eine einzelne Exercise-Snack-Einheit typisch?",
+  "correct": "Wenige Sekunden bis etwa 1–2 Minuten",
+  "wrong": [
+   "Mindestens 45 Minuten am Stück",
+   "Genau 30 Minuten",
+   "2–3 Stunden",
+   "Mindestens 60 Minuten"
+  ]
+ },
+ {
+  "n": 17,
+  "level": 1,
+  "lec": "L7",
+  "q": "Welcher Glukosetransporter wird durch Muskelkontraktion an die Zellmembran verlagert und ermöglicht insulinunabhängige Glukoseaufnahme?",
+  "correct": "GLUT4",
+  "wrong": [
+   "GLUT1",
+   "SGLT1",
+   "GLUT2",
+   "Der Insulinrezeptor selbst"
+  ]
+ },
+ {
+  "n": 18,
+  "level": 1,
+  "lec": "L8/9",
+  "q": "Welche Aminosäure gilt als wichtigster Auslöser ('Trigger') der Muskelproteinsynthese?",
+  "correct": "Leucin",
+  "wrong": [
+   "Glutamin",
+   "Alanin",
+   "Glycin",
+   "Prolin"
+  ]
+ },
+ {
+  "n": 19,
+  "level": 1,
+  "lec": "L8/9",
+  "q": "Welches Nahrungsprotein wird typischerweise als schnell verdauliche ('fast') Proteinquelle bezeichnet?",
+  "correct": "Molkenprotein (Whey)",
+  "wrong": [
+   "Casein",
+   "Kollagen",
+   "Gelatine",
+   "Sojaisolat mit Ballaststoffen"
+  ]
+ },
+ {
+  "n": 20,
+  "level": 1,
+  "lec": "L8/9",
+  "q": "Was kennzeichnet ein 'vollständiges' (hochwertiges) Protein?",
+  "correct": "Es enthält alle essenziellen Aminosäuren in ausreichender Menge",
+  "wrong": [
+   "Es besteht ausschließlich aus verzweigtkettigen Aminosäuren",
+   "Es enthält keinerlei essenzielle Aminosäuren",
+   "Es liefert mehr Energie pro Gramm als Fett",
+   "Es kann ausschließlich nachts verwertet werden"
+  ]
+ },
+ {
+  "n": 21,
+  "level": 2,
+  "lec": "L1",
+  "q": "Welche Aussage zur akuten Stressreaktion auf intensive Belastung über die HPA-Achse ist korrekt?",
+  "correct": "Cortisol steigt vorübergehend an und wirkt akut immunmodulierend bzw. transient immunsuppressiv",
+  "wrong": [
+   "Cortisol sinkt während der Belastung dauerhaft unter Ruhewerte",
+   "Cortisol blockiert jede Form der Glukosebereitstellung",
+   "Cortisol wird ausschließlich im Muskel gebildet",
+   "Cortisol hat keinerlei Einfluss auf das Immunsystem"
+  ]
+ },
+ {
+  "n": 22,
+  "level": 2,
+  "lec": "L1",
+  "q": "Was beschreibt die 'Open-Window'-Hypothese nach langer, intensiver Ausdauerbelastung?",
+  "correct": "Ein vorübergehendes Zeitfenster erhöhter Infektanfälligkeit durch transiente Immunsuppression",
+  "wrong": [
+   "Eine dauerhafte Steigerung der Immunabwehr nach jeder Belastung",
+   "Die irreversible Zerstörung des Immungedächtnisses",
+   "Ein Fenster maximaler Muskelproteinsynthese ohne Immunbezug",
+   "Die vollständige Immunität gegen alle Atemwegsinfekte"
+  ]
+ },
+ {
+  "n": 23,
+  "level": 2,
+  "lec": "L1",
+  "q": "Warum kann eine routinemäßig hochdosierte Antioxidantien-Supplementierung Trainingsanpassungen abschwächen?",
+  "correct": "Weil belastungsinduzierte ROS als Signalmoleküle für adaptive Genexpression nötig sind und abgepuffert werden",
+  "wrong": [
+   "Weil Antioxidantien die Magenentleerung beschleunigen",
+   "Weil sie die Muskeldurchblutung dauerhaft drosseln",
+   "Weil sie ATP direkt verbrauchen",
+   "Weil sie die Schlafdauer halbieren"
+  ]
+ },
+ {
+  "n": 24,
+  "level": 2,
+  "lec": "L2",
+  "q": "Wie viel ATP liefert die anaerobe Glykolyse netto pro Glukosemolekül (bis zum Laktat)?",
+  "correct": "2 ATP",
+  "wrong": [
+   "32 ATP",
+   "38 ATP",
+   "Über 100 ATP",
+   "0 ATP"
+  ]
+ },
+ {
+  "n": 25,
+  "level": 2,
+  "lec": "L2",
+  "q": "Was beschreibt der Cori-Zyklus?",
+  "correct": "Laktat aus dem Muskel wird in der Leber zu Glukose resynthetisiert und steht erneut zur Verfügung",
+  "wrong": [
+   "Fettsäuren werden im Muskel direkt zu Glykogen umgebaut",
+   "Aminosäuren werden in der Niere zu ATP oxidiert",
+   "Glukose wird im Darm zu Laktat vergoren",
+   "CO₂ wird in der Lunge zu Glukose fixiert"
+  ]
+ },
+ {
+  "n": 26,
+  "level": 2,
+  "lec": "L2",
+  "q": "Warum kann Muskelglykogen – anders als Leberglykogen – nicht zur Regulation des Blutzuckers beitragen?",
+  "correct": "Weil der Skelettmuskel das Enzym Glukose-6-Phosphatase nicht besitzt und Glukose nicht ins Blut abgeben kann",
+  "wrong": [
+   "Weil Muskelglykogen keine Glukose enthält",
+   "Weil Muskelglykogen sofort in Fett umgewandelt wird",
+   "Weil der Muskel kein Insulin besitzt",
+   "Weil Muskelglykogen nur im Schlaf abgebaut wird"
+  ]
+ },
+ {
+  "n": 27,
+  "level": 2,
+  "lec": "L2",
+  "q": "Welche Aussage zum 'Crossover-Konzept' der Substratnutzung trifft zu?",
+  "correct": "Mit steigender Belastungsintensität nimmt der relative Beitrag der Kohlenhydrate zu und der der Fette ab",
+  "wrong": [
+   "Mit steigender Intensität nimmt der Fettanteil immer weiter zu",
+   "Die Substratnutzung ist intensitätsunabhängig konstant",
+   "Bei hoher Intensität werden ausschließlich Fette oxidiert",
+   "Proteine sind bei jeder Intensität das Hauptsubstrat"
+  ]
+ },
+ {
+  "n": 28,
+  "level": 2,
+  "lec": "L3",
+  "q": "Wie ist die erste Laktatschwelle (aerobe Schwelle, LT1) konzeptionell zu verstehen?",
+  "correct": "Als die Intensität, bei der die Blutlaktatkonzentration erstmals deutlich über den Ruhewert ansteigt",
+  "wrong": [
+   "Als der Punkt maximaler Sauerstoffaufnahme",
+   "Als die Intensität, bei der die Atmung vollständig stoppt",
+   "Als der Ruhestoffwechsel im Liegen",
+   "Als der Punkt, an dem kein ATP mehr gebildet wird"
+  ]
+ },
+ {
+  "n": 29,
+  "level": 2,
+  "lec": "L3",
+  "q": "Wie lautet das Fick'sche Prinzip für die Sauerstoffaufnahme (VO₂)?",
+  "correct": "VO₂ = Herzzeitvolumen × arterio-venöse O₂-Differenz (a-vO₂-Differenz)",
+  "wrong": [
+   "VO₂ = Atemfrequenz × Körpergewicht",
+   "VO₂ = Herzfrequenz × respiratorischer Quotient",
+   "VO₂ = MET × Dauer in Minuten",
+   "VO₂ = Schlagvolumen ÷ Blutdruck"
+  ]
+ },
+ {
+  "n": 30,
+  "level": 2,
+  "lec": "L3",
+  "q": "Wie berechnet die Karvonen-Formel die Ziel-Herzfrequenz?",
+  "correct": "Ziel-HF = Ruhe-HF + Intensitätsfaktor × (maximale HF − Ruhe-HF)",
+  "wrong": [
+   "Ziel-HF = maximale HF × MET",
+   "Ziel-HF = 220 − Lebensalter, ohne weitere Größen",
+   "Ziel-HF = VO₂max ÷ Körpergewicht",
+   "Ziel-HF = Ruhe-HF × respiratorischer Quotient"
+  ]
+ },
+ {
+  "n": 31,
+  "level": 2,
+  "lec": "L7",
+  "q": "Wodurch wird der zelluläre Energiesensor AMPK primär aktiviert?",
+  "correct": "Durch einen Anstieg des AMP/ADP-zu-ATP-Verhältnisses, also bei energetischem Defizit der Zelle",
+  "wrong": [
+   "Durch einen Überschuss an ATP in Ruhe",
+   "Durch hohe Insulinspiegel allein",
+   "Durch absolute Bewegungslosigkeit",
+   "Durch einen Abfall der intrazellulären Kalziumkonzentration in Ruhe"
+  ]
+ },
+ {
+  "n": 32,
+  "level": 2,
+  "lec": "L7",
+  "q": "Welche der folgenden Substanzen ist ein Myokin, das aus kontrahierender Muskulatur freigesetzt wird?",
+  "correct": "Irisin",
+  "wrong": [
+   "Insulin",
+   "Adrenalin",
+   "Pepsin",
+   "Hämoglobin"
+  ]
+ },
+ {
+  "n": 33,
+  "level": 2,
+  "lec": "L7",
+  "q": "Welcher Effekt ist für das regelmäßige Unterbrechen langer Sitzphasen ('activity breaks') belegt?",
+  "correct": "Eine Senkung der postprandialen Glukose- und Insulinspitzen",
+  "wrong": [
+   "Ein Anstieg der Nüchternblutfette auf das Doppelte",
+   "Eine vollständige Unterdrückung der GLUT4-Translokation",
+   "Eine Reduktion der Muskeldurchblutung",
+   "Keine messbare Stoffwechselwirkung"
+  ]
+ },
+ {
+  "n": 34,
+  "level": 2,
+  "lec": "L8/9",
+  "q": "Welche Proteinstrategie wird zur Unterstützung der nächtlichen Muskelproteinsynthese empfohlen?",
+  "correct": "Eine langsam verdauliche Proteinquelle (z. B. Casein, ~30–40 g) vor dem Schlafengehen",
+  "wrong": [
+   "Vollständiger Verzicht auf Protein am Abend",
+   "Ausschließlich Whey unmittelbar vor dem Einschlafen in Minimaldosis",
+   "Nur Kohlenhydrate ohne Protein",
+   "Eine einzige sehr große Proteinmahlzeit am Morgen"
+  ]
+ },
+ {
+  "n": 35,
+  "level": 2,
+  "lec": "L8/9",
+  "q": "Warum benötigen ältere Erwachsene tendenziell mehr Protein pro Mahlzeit als jüngere?",
+  "correct": "Wegen der 'anabolen Resistenz' – die Muskelproteinsynthese reagiert abgeschwächt auf einen gegebenen Reiz",
+  "wrong": [
+   "Weil ältere Menschen Protein schneller resorbieren",
+   "Weil im Alter keine Muskelproteinsynthese mehr stattfindet",
+   "Weil Leucin im Alter wirkungslos ist",
+   "Weil ältere Menschen grundsätzlich keine essenziellen Aminosäuren benötigen"
+  ]
+ },
+ {
+  "n": 36,
+  "level": 2,
+  "lec": "L8/9",
+  "q": "Welche Folge hat eine chronisch niedrige Energieverfügbarkeit (RED-S) bei Sportlerinnen und Sportlern?",
+  "correct": "Beeinträchtigung u. a. von Immunfunktion, Knochengesundheit und Hormonsystem",
+  "wrong": [
+   "Eine Steigerung der Knochendichte",
+   "Eine durchweg verbesserte Infektabwehr",
+   "Eine Verdopplung der VO₂max",
+   "Keinerlei gesundheitliche Auswirkungen"
+  ]
+ },
+ {
+  "n": 37,
+  "level": 2,
+  "lec": "L2",
+  "q": "Wie unterscheiden sich tierische und pflanzliche Proteinquellen typischerweise in der Proteinqualität?",
+  "correct": "Tierische Proteine haben meist ein vollständigeres Aminosäureprofil und eine höhere Verdaulichkeit (höherer DIAAS)",
+  "wrong": [
+   "Pflanzliche Proteine sind ausnahmslos vollständiger und besser verdaulich",
+   "Beide sind in Qualität und Verdaulichkeit stets identisch",
+   "Tierische Proteine enthalten keine essenziellen Aminosäuren",
+   "Pflanzliche Proteine liefern doppelt so viele Kalorien pro Gramm"
+  ]
+ },
+ {
+  "n": 38,
+  "level": 2,
+  "lec": "L3",
+  "q": "Was beschreibt das Sauerstoffdefizit zu Beginn einer Belastung?",
+  "correct": "Die Differenz zwischen O₂-Bedarf und tatsächlicher O₂-Aufnahme, bis ein Steady State erreicht ist",
+  "wrong": [
+   "Den Sauerstoffüberschuss in der Erholung",
+   "Die maximale O₂-Aufnahme im Steady State",
+   "Den vollständigen Verzicht auf O₂ während der gesamten Belastung",
+   "Die O₂-Aufnahme ausschließlich in Ruhe"
+  ]
+ },
+ {
+  "n": 39,
+  "level": 2,
+  "lec": "L1",
+  "q": "Welche Aussage zur zirkadianen Rhythmik der Leistungsfähigkeit ist korrekt?",
+  "correct": "Viele Leistungsparameter und die Körperkerntemperatur erreichen am späten Nachmittag/frühen Abend ein Maximum",
+  "wrong": [
+   "Die Leistungsfähigkeit ist tageszeitunabhängig völlig konstant",
+   "Das Maximum liegt stets unmittelbar nach dem Aufwachen",
+   "Die Körperkerntemperatur ist nachts am höchsten",
+   "Zirkadiane Rhythmen haben keinen Einfluss auf Sport"
+  ]
+ },
+ {
+  "n": 40,
+  "level": 2,
+  "lec": "L7",
+  "q": "Welcher Trainingseffekt kurzer, intensiver Exercise Snacks ist dokumentiert?",
+  "correct": "Eine Verbesserung der kardiorespiratorischen Fitness (z. B. VO₂peak) trotz sehr geringem Zeitaufwand",
+  "wrong": [
+   "Eine Abnahme der VO₂peak durch zu kurze Reize",
+   "Ausschließlich eine Senkung der Muskelmasse",
+   "Keine Wirkung, da die Dauer zu kurz ist",
+   "Eine garantierte Verdopplung der Maximalkraft in einer Woche"
+  ]
+ },
+ {
+  "n": 41,
+  "level": 3,
+  "lec": "L1",
+  "q": "Wie wird der Transkriptionsfaktor Nrf2 durch Belastung aktiviert?",
+  "correct": "Belastungsgenerierte ROS lösen Nrf2 von Keap1; Nrf2 transloziert in den Zellkern und bindet an das Antioxidant Response Element (ARE)",
+  "wrong": [
+   "Nrf2 wird durch hohe Antioxidantienspiegel aus dem Kern verdrängt",
+   "Nrf2 hemmt die Bildung antioxidativer Enzyme",
+   "Nrf2 wird ausschließlich durch Insulin aktiviert",
+   "Nrf2 baut Mitochondrien ab und stoppt die Genexpression"
+  ]
+ },
+ {
+  "n": 42,
+  "level": 3,
+  "lec": "L1",
+  "q": "Welche Funktion erfüllt PGC-1α als zentraler Regulator der Trainingsanpassung?",
+  "correct": "Es ist ein Master-Koaktivator der mitochondrialen Biogenese und steigert die oxidative Kapazität",
+  "wrong": [
+   "Es hemmt die Mitochondrienbildung und senkt die Ausdauer",
+   "Es wirkt ausschließlich auf die Antikörperproduktion",
+   "Es ist ein Strukturprotein der Z-Scheibe",
+   "Es baut ausschließlich Glykogen in der Leber ab"
+  ]
+ },
+ {
+  "n": 43,
+  "level": 3,
+  "lec": "L1",
+  "q": "Über welchen Signalweg fördert Belastung die Autophagie zur Beseitigung geschädigter Zellbestandteile?",
+  "correct": "Energiemangel aktiviert AMPK, das ULK1 phosphoryliert und so die Autophagie initiiert",
+  "wrong": [
+   "mTORC1 aktiviert direkt ULK1 und steigert die Autophagie",
+   "Hohe ATP-Spiegel triggern die Autophagie über Insulin",
+   "Autophagie wird durch AMPK vollständig gehemmt",
+   "Autophagie findet ausschließlich in Erythrozyten statt"
+  ]
+ },
+ {
+  "n": 44,
+  "level": 3,
+  "lec": "L2",
+  "q": "In welchem Schritt der vollständigen Glukoseoxidation entsteht der weitaus größte Teil des ATP?",
+  "correct": "In der oxidativen Phosphorylierung an der mitochondrialen Atmungskette",
+  "wrong": [
+   "In der Glykolyse im Zytosol",
+   "In der Substratkettenphosphorylierung des Citratzyklus",
+   "Bei der Laktatbildung",
+   "Beim Abbau von Glykogen zu Glukose-6-Phosphat"
+  ]
+ },
+ {
+  "n": 45,
+  "level": 3,
+  "lec": "L2",
+  "q": "Welche Aussage zu den Elektronenüberträgern der Atmungskette ist korrekt?",
+  "correct": "NADH speist Elektronen an Komplex I ein und liefert mehr ATP als FADH₂, das an Komplex II eintritt",
+  "wrong": [
+   "FADH₂ liefert mehr ATP als NADH",
+   "NADH und FADH₂ liefern exakt gleich viel ATP",
+   "Beide Überträger speisen ausschließlich Komplex IV",
+   "NADH wird nur in der anaeroben Glykolyse gebildet"
+  ]
+ },
+ {
+  "n": 46,
+  "level": 3,
+  "lec": "L2",
+  "q": "Welche Substrate dienen in der Leber als Ausgangsstoffe der Glukoneogenese?",
+  "correct": "Laktat, Glycerol und glukogene Aminosäuren",
+  "wrong": [
+   "Ausschließlich freie Fettsäuren",
+   "Cholesterin und Ketonkörper",
+   "Ausschließlich Ballaststoffe aus dem Darm",
+   "Vitamine und Mineralstoffe"
+  ]
+ },
+ {
+  "n": 47,
+  "level": 3,
+  "lec": "L3",
+  "q": "Welche Annahmen liegen der indirekten Kalorimetrie zur Energieumsatzberechnung zugrunde?",
+  "correct": "Ein metabolischer Steady State und eine vernachlässigbare Proteinoxidation, sodass der Umsatz aus O₂-Aufnahme und CO₂-Abgabe ableitbar ist",
+  "wrong": [
+   "Der Energieumsatz hängt nur vom Körpergewicht ab",
+   "Die Proteinoxidation liefert stets über 50 % der Energie",
+   "Es wird kein O₂ verbraucht und kein CO₂ gebildet",
+   "Der RER muss konstant 0,5 betragen"
+  ]
+ },
+ {
+  "n": 48,
+  "level": 3,
+  "lec": "L3",
+  "q": "Was beschreibt der Bohr-Effekt im arbeitenden Muskel?",
+  "correct": "Sinkender pH-Wert, steigendes CO₂ und höhere Temperatur verschieben die O₂-Bindungskurve nach rechts und erleichtern die O₂-Abgabe",
+  "wrong": [
+   "Steigender pH verschiebt die Kurve nach rechts und bindet O₂ stärker",
+   "CO₂-Anstieg erhöht die O₂-Affinität des Hämoglobins",
+   "Der Effekt verhindert jede O₂-Abgabe im Muskel",
+   "Temperaturanstieg verschiebt die Kurve nach links"
+  ]
+ },
+ {
+  "n": 49,
+  "level": 3,
+  "lec": "L3",
+  "q": "Was bezeichnet W′ (W prime) im Power-Duration-Modell?",
+  "correct": "Die endliche Arbeitskapazität, die oberhalb der Critical Power verfügbar ist, bevor Erschöpfung eintritt",
+  "wrong": [
+   "Die maximale aerobe Dauerleistung unterhalb der Schwelle",
+   "Den Ruheenergieumsatz",
+   "Die maximale Herzfrequenz",
+   "Den respiratorischen Quotienten bei Erschöpfung"
+  ]
+ },
+ {
+  "n": 50,
+  "level": 3,
+  "lec": "L3",
+  "q": "Wie verändern sich Herzfrequenz und Schlagvolumen mit steigender Belastungsintensität bis zur Ausbelastung?",
+  "correct": "Das Schlagvolumen steigt zunächst und erreicht ein Plateau, während die Herzfrequenz weiter ansteigt und das Herzzeitvolumen erhöht",
+  "wrong": [
+   "Beide sinken kontinuierlich mit steigender Intensität",
+   "Das Schlagvolumen steigt unbegrenzt linear, die Herzfrequenz bleibt konstant",
+   "Die Herzfrequenz sinkt, das Schlagvolumen steigt unbegrenzt",
+   "Beide bleiben über den gesamten Bereich unverändert"
+  ]
+ },
+ {
+  "n": 51,
+  "level": 3,
+  "lec": "L7",
+  "q": "Welche Rolle spielt Butyrat, eine kurzkettige Fettsäure (SCFA) aus der mikrobiellen Fermentation?",
+  "correct": "Es ist die bevorzugte Energiequelle der Kolonozyten, stärkt die Darmbarriere und wirkt anti-entzündlich",
+  "wrong": [
+   "Es ist ein toxisches Abbauprodukt ohne Funktion",
+   "Es aktiviert NF-κB und steigert die Entzündung",
+   "Es wird ausschließlich in der Lunge gebildet",
+   "Es hemmt jede Form der Energiebereitstellung"
+  ]
+ },
+ {
+  "n": 52,
+  "level": 3,
+  "lec": "L7",
+  "q": "Welche Wirkung hat langes ununterbrochenes Sitzen auf die Lipoproteinlipase (LPL) der Skelettmuskulatur?",
+  "correct": "Die muskuläre LPL-Aktivität wird stark gedrosselt, was die Triglyceridclearance verschlechtert und Plasmatriglyceride erhöht",
+  "wrong": [
+   "Die LPL-Aktivität steigt durch Inaktivität an",
+   "LPL spaltet während des Sitzens vermehrt Triglyceride",
+   "Sitzen hat keinen Einfluss auf die LPL",
+   "LPL wird durch Sitzen in Glukose umgewandelt"
+  ]
+ },
+ {
+  "n": 53,
+  "level": 3,
+  "lec": "L7",
+  "q": "Wie verläuft die Immunzellmobilisation typischerweise um eine akute Belastung herum?",
+  "correct": "Biphasisch: während der Belastung katecholaminvermittelte Lymphozytose (v. a. NK-Zellen, CD8⁺), danach eine vorübergehende Lymphozytopenie",
+  "wrong": [
+   "Monophasisch mit dauerhaftem Anstieg aller Lymphozyten",
+   "Vollständiger Verlust aller Immunzellen während der Belastung",
+   "Keinerlei Veränderung der Zellzahlen",
+   "Ausschließlich ein Abfall der Zellzahl ohne vorherigen Anstieg"
+  ]
+ },
+ {
+  "n": 54,
+  "level": 3,
+  "lec": "L8/9",
+  "q": "Welche Signale integriert mTORC1, um die Muskelproteinsynthese zu steuern?",
+  "correct": "Verfügbarkeit von Aminosäuren (v. a. Leucin), mechanische Belastung und anabole Hormone wie Insulin",
+  "wrong": [
+   "Ausschließlich den Schlaf-Wach-Rhythmus",
+   "Nur die Körpertemperatur",
+   "Allein die Atemfrequenz",
+   "Ausschließlich den Hydratationsstatus"
+  ]
+ },
+ {
+  "n": 55,
+  "level": 3,
+  "lec": "L8/9",
+  "q": "Wie ist die Netto-Muskelproteinbilanz definiert, und wie wird sie positiv?",
+  "correct": "Als Differenz aus Muskelproteinsynthese und -abbau; Krafttraining kombiniert mit Proteinzufuhr verschiebt sie ins Positive",
+  "wrong": [
+   "Als Summe aus Synthese und Abbau; sie ist immer null",
+   "Allein der Abbau bestimmt die Bilanz",
+   "Sie wird ausschließlich durch Kohlenhydrate positiv",
+   "Sie ist unabhängig von Training und Ernährung"
+  ]
+ },
+ {
+  "n": 56,
+  "level": 3,
+  "lec": "L8/9",
+  "q": "Was bedeutet eine positive Stickstoffbilanz im Kontext von Training und Ernährung?",
+  "correct": "Die Stickstoffaufnahme übersteigt die -ausscheidung, was netto Proteinaufbau (z. B. bei Training/Wachstum) anzeigt",
+  "wrong": [
+   "Die Ausscheidung übersteigt die Aufnahme bei Muskelaufbau",
+   "Sie zeigt stets einen Proteinmangel an",
+   "Sie ist nur bei vollständigem Fasten möglich",
+   "Sie bedeutet, dass kein Protein verstoffwechselt wird"
+  ]
+ },
+ {
+  "n": 57,
+  "level": 3,
+  "lec": "L1",
+  "q": "Welche Funktion erfüllen Hitzeschockproteine (HSPs) bei der Belastungsanpassung?",
+  "correct": "Sie wirken als molekulare Chaperone, stabilisieren und falten Proteine und schützen Zellen vor stressbedingter Schädigung",
+  "wrong": [
+   "Sie bauen funktionsfähige Proteine gezielt ab",
+   "Sie sind ausschließlich Energiespeicher",
+   "Sie hemmen die mitochondriale Biogenese",
+   "Sie werden nur bei Kälte und nie bei Belastung gebildet"
+  ]
+ },
+ {
+  "n": 58,
+  "level": 3,
+  "lec": "L2",
+  "q": "Welche Aussage zur Energieflussrate und ATP-Ausbeute der Systeme ist korrekt?",
+  "correct": "Das ATP/Kreatinphosphat-System hat die höchste Leistung (Flussrate), die aerobe Oxidation die höchste Gesamtkapazität (ATP-Ausbeute)",
+  "wrong": [
+   "Die aerobe Oxidation hat zugleich die höchste Flussrate und die geringste Kapazität",
+   "Die anaerobe Glykolyse hat die höchste Gesamtkapazität aller Systeme",
+   "Alle drei Systeme haben identische Flussrate und Kapazität",
+   "Das ATP/CP-System hat die niedrigste Leistung"
+  ]
+ },
+ {
+  "n": 59,
+  "level": 3,
+  "lec": "L3",
+  "q": "Wodurch vergrößert Ausdauertraining die arterio-venöse O₂-Differenz (a-vO₂-Differenz)?",
+  "correct": "Durch periphere Anpassungen wie höhere Kapillar- und Mitochondriendichte, die die O₂-Extraktion im Muskel steigern",
+  "wrong": [
+   "Durch eine Verringerung der Kapillardichte",
+   "Durch Abbau von Mitochondrien im Muskel",
+   "Ausschließlich durch eine Senkung des Herzzeitvolumens",
+   "Durch eine Reduktion der Myoglobinkonzentration"
+  ]
+ },
+ {
+  "n": 60,
+  "level": 3,
+  "lec": "L7",
+  "q": "Über welchen molekularen Mechanismus tragen wiederholte Exercise Snacks langfristig zur mitochondrialen Anpassung bei?",
+  "correct": "Wiederholte AMPK-PGC-1α-Aktivierungspulse fördern kumulativ die mitochondriale Biogenese",
+  "wrong": [
+   "Durch dauerhafte Hemmung von PGC-1α",
+   "Durch einmalige mTORC1-Aktivierung ohne Wiederholungseffekt",
+   "Durch Abbau von Mitochondrien bei jedem Reiz",
+   "Durch ausschließliche Wirkung auf rote Blutkörperchen"
+  ]
+ },
+ {
+  "n": 61,
+  "level": 1,
+  "lec": "L1",
+  "q": "Aus welchen Komponenten setzt sich die körperliche Fitness (physical fitness) klassisch zusammen?",
+  "correct": "Aus Ausdauer, Muskelkraft, Beweglichkeit und Körperzusammensetzung",
+  "wrong": [
+   "Ausschließlich aus der maximalen Sprintgeschwindigkeit",
+   "Allein aus dem Körpergewicht",
+   "Nur aus der Reaktionszeit",
+   "Ausschließlich aus der Lungengröße"
+  ]
+ },
+ {
+  "n": 62,
+  "level": 1,
+  "lec": "L2",
+  "q": "Welchen physiologischen Brennwert besitzt 1 g Protein?",
+  "correct": "ca. 4,1 kcal/g",
+  "wrong": [
+   "ca. 9,3 kcal/g",
+   "ca. 7,1 kcal/g",
+   "ca. 6,5 kcal/g",
+   "ca. 1,0 kcal/g"
+  ]
+ },
+ {
+  "n": 63,
+  "level": 1,
+  "lec": "L2",
+  "q": "Welche Immunzellen zählen zu den klassischen Phagozyten?",
+  "correct": "Neutrophile Granulozyten und Makrophagen",
+  "wrong": [
+   "Erythrozyten und Thrombozyten",
+   "Adipozyten und Osteozyten",
+   "Ausschließlich B-Lymphozyten",
+   "Ausschließlich Mastzellen"
+  ]
+ },
+ {
+  "n": 64,
+  "level": 1,
+  "lec": "L3",
+  "q": "Was bezeichnet das Schlagvolumen des Herzens?",
+  "correct": "Das pro Herzschlag aus der linken Kammer ausgeworfene Blutvolumen",
+  "wrong": [
+   "Die Anzahl der Herzschläge pro Minute",
+   "Das gesamte Blutvolumen des Körpers",
+   "Den Druck in der Aorta in Ruhe",
+   "Die Sauerstoffaufnahme pro Minute"
+  ]
+ },
+ {
+  "n": 65,
+  "level": 1,
+  "lec": "L3",
+  "q": "Welcher respiratorische Quotient (RQ) ist bei gemischter Kostgrundlage in Ruhe typisch?",
+  "correct": "ca. 0,85",
+  "wrong": [
+   "ca. 1,30",
+   "ca. 0,40",
+   "ca. 1,60",
+   "ca. 0,20"
+  ]
+ },
+ {
+  "n": 66,
+  "level": 1,
+  "lec": "L7",
+  "q": "Wie ist die typische Anwendungshäufigkeit von Exercise Snacks über den Tag?",
+  "correct": "Mehrmals täglich, durch mehrere Stunden voneinander getrennt",
+  "wrong": [
+   "Genau einmal pro Woche",
+   "Nur einmal jährlich",
+   "Ausschließlich als Block von 5 Stunden",
+   "Nie häufiger als einmal im Monat"
+  ]
+ },
+ {
+  "n": 67,
+  "level": 1,
+  "lec": "L8/9",
+  "q": "Welche drei Aminosäuren bilden die verzweigtkettigen Aminosäuren (BCAA)?",
+  "correct": "Leucin, Isoleucin und Valin",
+  "wrong": [
+   "Glycin, Alanin und Serin",
+   "Lysin, Methionin und Tryptophan",
+   "Glutamin, Asparagin und Prolin",
+   "Histidin, Arginin und Cystein"
+  ]
+ },
+ {
+  "n": 68,
+  "level": 2,
+  "lec": "L1",
+  "q": "Welche autonome Reaktion dominiert in der frühen Erholungsphase nach Belastung?",
+  "correct": "Eine zunehmende parasympathische Reaktivierung, erkennbar an der Erholung der Herzfrequenzvariabilität (HRV)",
+  "wrong": [
+   "Eine dauerhafte Sympathikus-Dominanz ohne HRV-Erholung",
+   "Ein vollständiger Ausfall des autonomen Nervensystems",
+   "Ein irreversibler Anstieg der Herzfrequenz",
+   "Keine Veränderung der autonomen Aktivität"
+  ]
+ },
+ {
+  "n": 69,
+  "level": 2,
+  "lec": "L2",
+  "q": "Welche moderne Sicht auf Laktat ('Laktat-Shuttle') ist korrekt?",
+  "correct": "Laktat ist kein bloßes Abfallprodukt, sondern ein verwertbares Substrat, das zwischen Geweben transportiert und zur Energiegewinnung oder Glukoneogenese genutzt wird",
+  "wrong": [
+   "Laktat ist ausschließlich ein toxisches Endprodukt ohne Nutzen",
+   "Laktat kann vom Körper nicht weiter verstoffwechselt werden",
+   "Laktat wird nur über den Urin ausgeschieden",
+   "Laktat blockiert jede weitere Energiebereitstellung"
+  ]
+ },
+ {
+  "n": 70,
+  "level": 2,
+  "lec": "L3",
+  "q": "Wie ist die Faustformel 'maximale Herzfrequenz = 220 − Lebensalter' einzuordnen?",
+  "correct": "Als grobe Schätzung mit großer interindividueller Streuung, die eine direkte Messung nicht ersetzt",
+  "wrong": [
+   "Als exakte, individuell immer zutreffende Größe",
+   "Als Maß für die VO₂max",
+   "Als Formel zur Berechnung des Grundumsatzes",
+   "Als präzise Bestimmung der Laktatschwelle"
+  ]
+ },
+ {
+  "n": 71,
+  "level": 2,
+  "lec": "L7",
+  "q": "Welcher Effekt eines kurzen Spaziergangs unmittelbar nach einer Mahlzeit ist belegt?",
+  "correct": "Eine Abschwächung des postprandialen Blutzuckeranstiegs",
+  "wrong": [
+   "Ein starker Anstieg des Nüchternblutzuckers",
+   "Eine vollständige Unterdrückung der Insulinsekretion",
+   "Eine Verschlechterung der Glukosetoleranz",
+   "Kein messbarer Stoffwechseleffekt"
+  ]
+ },
+ {
+  "n": 72,
+  "level": 2,
+  "lec": "L8/9",
+  "q": "Welche Verteilung der Proteinzufuhr über den Tag begünstigt die Muskelproteinsynthese am stärksten?",
+  "correct": "Eine gleichmäßige Verteilung auf mehrere Mahlzeiten (je ~25–30 g) über den Tag",
+  "wrong": [
+   "Eine einzige sehr große Portion am Abend",
+   "Ausschließlich Protein zum Frühstück",
+   "Eine möglichst ungleiche Verteilung mit langen Lücken",
+   "Vollständiger Verzicht über den Tag, nur nachts"
+  ]
+ },
+ {
+  "n": 73,
+  "level": 2,
+  "lec": "L2",
+  "q": "Warum ist die Fettoxidation an einen funktionierenden Kohlenhydratstoffwechsel gekoppelt ('Fett verbrennt im Feuer der Kohlenhydrate')?",
+  "correct": "Weil Oxalacetat aus dem Kohlenhydratabbau benötigt wird, damit Acetyl-CoA in den Citratzyklus eintreten kann",
+  "wrong": [
+   "Weil Fettsäuren ohne Kohlenhydrate gar nicht gespeichert werden können",
+   "Weil Kohlenhydrate Fettsäuren direkt in ATP umwandeln",
+   "Weil Fett nur in Anwesenheit von Laktat verdaut wird",
+   "Weil Kohlenhydrate die β-Oxidation vollständig ersetzen"
+  ]
+ },
+ {
+  "n": 74,
+  "level": 2,
+  "lec": "L1",
+  "q": "Was beschreibt der Begriff 'Inflammaging'?",
+  "correct": "Eine chronische, niedriggradige systemische Entzündung im Alter, der regelmäßige Bewegung entgegenwirken kann",
+  "wrong": [
+   "Eine akute Entzündung, die nur bei jungen Sportlern auftritt",
+   "Den vollständigen Verlust jeder Immunfunktion im Alter",
+   "Eine ausschließlich vorteilhafte Entzündungsreaktion",
+   "Eine Entzündung, die nur durch Training verursacht wird"
+  ]
+ },
+ {
+  "n": 75,
+  "level": 3,
+  "lec": "L1",
+  "q": "Wie interagieren AMPK und mTORC1 bei gleichzeitigem Ausdauer- und Krafttraining (Interferenz)?",
+  "correct": "AMPK (Energiemangelsignal) hemmt mTORC1 und kann so die anabole, hypertrophieorientierte Signalgebung abschwächen",
+  "wrong": [
+   "AMPK aktiviert mTORC1 und verstärkt die Hypertrophie",
+   "mTORC1 hemmt AMPK und stoppt die Ausdaueranpassung vollständig",
+   "Beide Signalwege sind völlig unabhängig und beeinflussen sich nie",
+   "AMPK und mTORC1 sind dasselbe Molekül"
+  ]
+ },
+ {
+  "n": 76,
+  "level": 3,
+  "lec": "L2",
+  "q": "Welche Aussage zur Resynthese von Kreatinphosphat (PCr) nach intensiver Belastung ist korrekt?",
+  "correct": "Die PCr-Resynthese ist ein aerober Prozess und erfolgt überwiegend in der Erholungsphase mithilfe oxidativ gewonnenen ATPs",
+  "wrong": [
+   "Die PCr-Resynthese erfolgt rein anaerob während der Belastung",
+   "PCr wird nicht resynthetisiert, sondern nur einmal verbraucht",
+   "Die Resynthese benötigt kein ATP",
+   "Sie findet ausschließlich im Schlaf statt"
+  ]
+ },
+ {
+  "n": 77,
+  "level": 3,
+  "lec": "L3",
+  "q": "Was beschreibt der Haldane-Effekt beim Gastransport?",
+  "correct": "Die Oxygenierung des Hämoglobins in der Lunge senkt dessen CO₂-Affinität und fördert so die CO₂-Abgabe",
+  "wrong": [
+   "Die Oxygenierung erhöht die CO₂-Affinität und hält CO₂ zurück",
+   "Er beschreibt die Rechtsverschiebung der O₂-Bindungskurve im Muskel",
+   "Er bezeichnet die aktive CO₂-Aufnahme unter ATP-Verbrauch",
+   "Er verhindert jeden CO₂-Transport im Blut"
+  ]
+ },
+ {
+  "n": 78,
+  "level": 3,
+  "lec": "L7",
+  "q": "Welcher Zusammenhang zwischen körperlicher Aktivität und Darmmikrobiom ist beschrieben?",
+  "correct": "Körperlich aktive Personen zeigen tendenziell eine höhere mikrobielle Diversität und vermehrte SCFA-Produktion",
+  "wrong": [
+   "Aktivität reduziert die mikrobielle Diversität immer drastisch",
+   "Das Mikrobiom ist von körperlicher Aktivität völlig unbeeinflusst",
+   "Aktivität führt zur vollständigen Eliminierung aller Darmbakterien",
+   "SCFA werden durch Aktivität vollständig abgebaut"
+  ]
+ },
+ {
+  "n": 79,
+  "level": 3,
+  "lec": "L8/9",
+  "q": "Was beschreibt der 'Muscle-Full'-Effekt (muskuläre Refraktärphase) der Proteinsynthese?",
+  "correct": "Nach einer ausreichenden Proteinmahlzeit kehrt die Muskelproteinsynthese trotz anhaltend erhöhter Aminosäuren auf das Ausgangsniveau zurück",
+  "wrong": [
+   "Die Muskelproteinsynthese steigt mit jeder weiteren Gramm Aminosäuren unbegrenzt an",
+   "Der Muskel kann beliebig viel Protein gleichzeitig in Synthese umsetzen",
+   "Die Synthese wird durch zusätzliche Aminosäuren dauerhaft auf Maximum gehalten",
+   "Der Effekt beschreibt den vollständigen Stopp jeglicher Synthese für Tage"
+  ]
+ },
+ {
+  "n": 80,
+  "level": 3,
+  "lec": "L8/9",
+  "q": "Was besagt die 'Protein-Leverage'-Hypothese?",
+  "correct": "Der Antrieb, ein Proteinziel zu decken, kann bei proteinarmer Kost zu einer Mehraufnahme an Gesamtenergie (Überkonsum) führen",
+  "wrong": [
+   "Proteinzufuhr senkt die Gesamtenergieaufnahme immer automatisch",
+   "Protein hat keinerlei Einfluss auf die Appetitregulation",
+   "Nur Fett steuert die Energieaufnahme, Protein ist irrelevant",
+   "Die Hypothese besagt, dass Protein nicht sättigt"
+  ]
+ }
+];
+
+/* ============================================================
+   STATE & HELFER
+   ============================================================ */
+const LETTERS = ["A","B","C","D","E"];
+const $ = id => document.getElementById(id);
+
+let session = null;        // aktuelle Quiz-Session
+let qStartTime = 0;        // Startzeitpunkt der aktuellen Frage (ms)
+let tickHandle = null;     // Intervall für Live-Timer
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function fmt(sec){ return sec.toFixed(1).replace(".",",") + " s"; }
+
+function buildOptions(item){
+  // Optionen mischen, Index der richtigen Antwort merken
+  const opts = shuffle([{t:item.correct,ok:true}, ...item.wrong.map(w=>({t:w,ok:false}))]);
+  return opts;
+}
+
+// Pool-Info beim Laden / bei Filteränderung
+function updatePoolInfo(){
+  const lvl = parseInt($("levelSel").value,10);
+  const pool = lvl===0 ? BANK : BANK.filter(q=>q.level===lvl);
+  const max = pool.length;
+  const inp = $("countSel");
+  inp.max = max;
+  if(parseInt(inp.value,10) > max) inp.value = max;
+  $("poolInfo").textContent = `Verfügbar in der Auswahl: ${max} Fragen.`;
+}
+$("levelSel").addEventListener("change", updatePoolInfo);
+updatePoolInfo();
+
+/* ============================================================
+   QUIZ-ABLAUF
+   ============================================================ */
+function startQuiz(){
+  const lvl = parseInt($("levelSel").value,10);
+  let pool = lvl===0 ? BANK.slice() : BANK.filter(q=>q.level===lvl);
+  if($("shuffleQ").checked) pool = shuffle(pool);
+  let count = parseInt($("countSel").value,10);
+  if(isNaN(count) || count<1) count = 1;
+  count = Math.min(count, pool.length);
+  pool = pool.slice(0, count);
+
+  session = {
+    questions: pool.map(item => ({...item, options: buildOptions(item)})),
+    idx: 0,
+    instant: $("instantFb").checked,
+    results: []   // {n, level, lec, q, correct(bool), timeSec, picked, answer}
+  };
+
+  $("start").classList.add("hidden");
+  $("results").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const s = session;
+  const item = s.questions[s.idx];
+
+  // Tags & Fortschritt
+  const lvlNames = {1:"Leicht",2:"Mittel",3:"Schwer"};
+  $("qtags").innerHTML =
+    `<span class="tag lvl lvl${item.level}">Stufe ${item.level} · ${lvlNames[item.level]}</span>`+
+    `<span class="tag">${item.lec}</span>`+
+    `<span class="tag">Frage ${s.idx+1}/${s.questions.length}</span>`;
+  $("progBar").style.width = ((s.idx)/s.questions.length*100) + "%";
+
+  $("qtext").textContent = item.q;
+  $("feedback").innerHTML = "";
+  $("nextBtn").disabled = true;
+  $("nextBtn").textContent = (s.idx === s.questions.length-1) ? "Auswerten" : "Weiter";
+
+  // Antworten
+  const wrap = $("answers");
+  wrap.innerHTML = "";
+  item.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "ans";
+    btn.type = "button";
+    btn.innerHTML = `<span class="letter">${LETTERS[i]}</span><span>${opt.t}</span>`;
+    btn.addEventListener("click", () => pick(i, btn));
+    wrap.appendChild(btn);
+  });
+
+  // Timer starten
+  qStartTime = performance.now();
+  startTick();
+}
+
+function startTick(){
+  stopTick();
+  $("qtimer").textContent = "0,0 s";
+  tickHandle = setInterval(() => {
+    const el = (performance.now()-qStartTime)/1000;
+    $("qtimer").textContent = fmt(el);
+  }, 100);
+}
+function stopTick(){ if(tickHandle){clearInterval(tickHandle); tickHandle=null;} }
+
+function pick(i, btn){
+  const s = session;
+  const item = s.questions[s.idx];
+  const timeSec = (performance.now()-qStartTime)/1000;
+  stopTick();
+  $("qtimer").textContent = fmt(timeSec);
+
+  const chosen = item.options[i];
+  const correct = !!chosen.ok;
+
+  // Auswahl protokollieren
+  s.results.push({
+    n:item.n, level:item.level, lec:item.lec, q:item.q,
+    correct, timeSec,
+    answer: chosen.t,
+    correctAnswer: item.correct
+  });
+
+  // Buttons sperren + markieren
+  const btns = $("answers").querySelectorAll(".ans");
+  btns.forEach((b, j) => {
+    b.disabled = true;
+    if(s.instant){
+      if(item.options[j].ok) b.classList.add("correct");
+      if(j===i && !correct) b.classList.add("wrong");
+    } else if(j===i){
+      b.classList.add(correct ? "correct" : "wrong");
+    }
+  });
+
+  // Feedback
+  if(s.instant){
+    $("feedback").innerHTML = correct
+      ? `<span class="fb-ok">Richtig.</span> <span style="color:var(--grey-5)">(${fmt(timeSec)})</span>`
+      : `<span class="fb-no">Leider falsch.</span> <span style="color:var(--grey-5)">Richtig wäre: ${item.correct}</span>`;
+  } else {
+    $("feedback").innerHTML = `<span style="color:var(--grey-5)">Antwort erfasst (${fmt(timeSec)}).</span>`;
+  }
+
+  $("nextBtn").disabled = false;
+  $("nextBtn").focus();
+}
+
+function next(){
+  const s = session;
+  if(s.idx < s.questions.length-1){
+    s.idx++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+/* ============================================================
+   ERGEBNIS
+   ============================================================ */
+function showResults(){
+  stopTick();
+  const s = session;
+  $("quiz").classList.add("hidden");
+  $("results").classList.remove("hidden");
+  $("progBar").style.width = "100%";
+
+  const total = s.results.length;
+  const right = s.results.filter(r=>r.correct).length;
+  const totalTime = s.results.reduce((a,r)=>a+r.timeSec,0);
+  const pct = total ? Math.round(right/total*100) : 0;
+  const avg = total ? totalTime/total : 0;
+
+  $("scoreHead").textContent = `${right} von ${total} Fragen richtig`;
+  $("sCorrect").textContent = right;
+  $("sPct").innerHTML = pct + "&nbsp;%";
+  $("sTotal").innerHTML = totalTime.toFixed(0) + "&nbsp;s";
+  $("sAvg").innerHTML = avg.toFixed(1).replace(".",",") + "&nbsp;s";
+
+  const lvlNames = {1:"1 · leicht",2:"2 · mittel",3:"3 · schwer"};
+  const tb = $("resultTable").querySelector("tbody");
+  tb.innerHTML = "";
+  s.results.forEach((r, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      `<td>${i+1}</td>`+
+      `<td>${lvlNames[r.level]}</td>`+
+      `<td>${r.lec}</td>`+
+      `<td class="qcell">${r.q}</td>`+
+      `<td class="c"><span class="dot ${r.correct?'ok':'no'}" title="${r.correct?'richtig':'falsch'}"></span></td>`+
+      `<td class="num">${fmt(r.timeSec)}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function downloadCSV(){
+  const s = session;
+  const sep = ";";
+  const head = ["Nr","Stufe","Lecture","Frage","Antwort_gewaehlt","Richtige_Antwort","Korrekt","Zeit_Sekunden"];
+  const esc = v => `"${String(v).replace(/"/g,'""')}"`;
+  const rows = s.results.map((r,i) => [
+    i+1, r.level, r.lec, r.q, r.answer, r.correctAnswer,
+    r.correct?"ja":"nein", r.timeSec.toFixed(2).replace(".",",")
+  ].map(esc).join(sep));
+
+  const right = s.results.filter(r=>r.correct).length;
+  const totalTime = s.results.reduce((a,r)=>a+r.timeSec,0);
+  const summary = [
+    "", "",
+    `Summe${sep}${esc("Richtig: "+right+" / "+s.results.length)}${sep}${esc("Gesamtzeit (s): "+totalTime.toFixed(2).replace(".",","))}`
+  ];
+
+  const csv = "\uFEFF" + [head.map(esc).join(sep), ...rows, ...summary].join("\r\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const stamp = new Date().toISOString().slice(0,16).replace(/[:T]/g,"-");
+  a.href = url; a.download = `quiz_ergebnis_${stamp}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function resetToStart(){
+  $("results").classList.add("hidden");
+  $("quiz").classList.add("hidden");
+  $("start").classList.remove("hidden");
+  $("progBar").style.width = "0%";
+  updatePoolInfo();
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+$("startBtn").addEventListener("click", startQuiz);
+$("nextBtn").addEventListener("click", next);
+$("retryBtn").addEventListener("click", resetToStart);
+$("csvBtn").addEventListener("click", downloadCSV);
+</script>
+</body>
+</html>
