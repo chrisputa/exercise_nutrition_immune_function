@@ -4,10 +4,12 @@ description: Examines the molecular and metabolic foundations of exercise, cover
   Provides an in-depth treatment of glucose utilization pathways based on Lehninger's Principles of Biochemistry - glycolysis, pyruvate fates (aerobic oxidation, lactic acid fermentation, ethanol fermentation), the Warburg effect, gluconeogenesis, and the pentose phosphate pathway.
   Covers substrate utilization at different exercise intensities, hormonal regulation of exercise metabolism (catecholamines, insulin/glucagon, cortisol/growth hormone), and the lactate paradigm shift — including lactate production, clearance, MCT transport, the lactate shuttle, GPR81 signalling, and protein lactylation as an epigenetic mechanism.
   Addresses muscle fiber types, biochemical adaptations to endurance and resistance training (AMPK, mTOR, PGC-1α signalling), reactive oxygen species and hormesis, recovery metabolism (EPOC, glycogen resynthesis, muscle protein synthesis), and clinical applications of exercise biochemistry.
+examRelevant: true
 draft: false
 ---
 
 import Figure from '../../../components/Figure.astro';
+import Table from '../../../components/Table.astro';
 import fig1 from '../../../assets/Cellular_Respiration_bw.png';
 import fig1Dark from '../../../assets/generated/Cellular_Respiration_bw_dark.png';
 import { Note } from '../../../components/MarginNote/index.js';
@@ -17,16 +19,61 @@ import { Note } from '../../../components/MarginNote/index.js';
 
 1. [Introduction to Exercise Biochemistry](#1-introduction-to-exercise-biochemistry)
 2. [Energy Systems and ATP Production](#2-energy-systems-and-atp-production)
+   - 2.1 [The ATP-PCr System (Phosphagen System)](#21-the-atp-pcr-system-phosphagen-system)
+   - 2.2 [Glycolytic System (Anaerobic Glycolysis)](#22-glycolytic-system-anaerobic-glycolysis)
+   - 2.3 [Oxidative System (Aerobic Metabolism)](#23-oxidative-system-aerobic-metabolism)
+   - 2.4 [Comparison of Energy Systems](#24-comparison-of-energy-systems)
+   - 2.5 [Common Metabolic Thresholds](#25-common-metabolic-thresholds)
+   - 2.6 [Major Pathways of Glucose Utilization](#26-major-pathways-of-glucose-utilization)
+   - 2.7 [Three Possible Catabolic Fates of Pyruvate](#27-three-possible-catabolic-fates-of-pyruvate)
+   - 2.8 [Glycolysis Is under Tight Regulation and the Warburg Effect](#28-glycolysis-is-under-tight-regulation-and-the-warburg-effect)
+   - 2.9 [Glucose Uptake Is Deficient in Type 1 Diabetes Mellitus](#29-glucose-uptake-is-deficient-in-type-1-diabetes-mellitus)
+   - 2.10 [Effect of Type 1 Diabetes on Carbohydrate and Fat Metabolism](#210-effect-of-type-1-diabetes-on-carbohydrate-and-fat-metabolism)
+   - 2.11 [SUMMARY Glycolysis](#211-summary-glycolysis)
+   - 2.12 [Fates of Pyruvate under Anaerobic Conditions: Fermentation](#212-fates-of-pyruvate-under-anaerobic-conditions-fermentation)
+   - 2.13 [SUMMARY Fates of Pyruvate under Anaerobic Conditions: Fermentation](#213-summary-fates-of-pyruvate-under-anaerobic-conditions-fermentation)
+   - 2.14 [Gluconeogenesis](#214-gluconeogenesis)
+   - 2.15 [Pentose Phosphate Pathway of Glucose Oxidation](#215-pentose-phosphate-pathway-of-glucose-oxidation)
+   - 2.16 [SUMMARY Pentose Phosphate Pathway](#216-summary-pentose-phosphate-pathway)
 3. [Substrate Utilization During Exercise](#3-substrate-utilization-during-exercise)
+   - 3.1 [Carbohydrate Metabolism](#31-carbohydrate-metabolism)
+   - 3.2 [Fat Metabolism](#32-fat-metabolism)
+   - 3.3 [Protein Metabolism](#33-protein-metabolism)
+   - 3.4 [Substrate Utilization at Different Exercise Intensities](#34-substrate-utilization-at-different-exercise-intensities)
 4. [Hormonal Regulation of Exercise Metabolism](#4-hormonal-regulation-of-exercise-metabolism)
+   - 4.1 [Catecholamines (Epinephrine and Norepinephrine)](#41-catecholamines-epinephrine-and-norepinephrine)
+   - 4.2 [Insulin and Glucagon](#42-insulin-and-glucagon)
+   - 4.3 [Cortisol and Growth Hormone](#43-cortisol-and-growth-hormone)
 5. [Lactate Metabolism and the Lactate Threshold](#5-lactate-metabolism-and-the-lactate-threshold)
+   - 5.1 [Introduction: The Lactate Paradigm Shift](#51-introduction-the-lactate-paradigm-shift)
+   - 5.2 [Lactate Production Pathways](#52-lactate-production-pathways)
+   - 5.3 [Lactate Clearance Mechanisms](#53-lactate-clearance-mechanisms)
+   - 5.4 [Lactate Transport and Regulation](#54-lactate-transport-and-regulation)
+   - 5.5 [Cellular Lactate Metabolism and Lactylation](#55-cellular-lactate-metabolism-and-lactylation)
+   - 5.6 [Lactate Homeostasis: The Complete Picture](#56-lactate-homeostasis-the-complete-picture)
+   - 5.7 [The Lactate Threshold in Exercise Physiology](#57-the-lactate-threshold-in-exercise-physiology)
+   - 5.8 [Summary: The Lactate Paradigm Shift](#58-summary-the-lactate-paradigm-shift)
 6. [Muscle Fiber Types and Metabolic Characteristics](#6-muscle-fiber-types-and-metabolic-characteristics)
+   - 6.1 [Type I Fibers (Slow-Twitch, Oxidative)](#61-type-i-fibers-slow-twitch-oxidative)
+   - 6.2 [Type II Fibers (Fast-Twitch)](#62-type-ii-fibers-fast-twitch)
+   - 6.3 [Muscle Fiber Type Characteristics](#63-muscle-fiber-type-characteristics)
 7. [Biochemical Adaptations to Training](#7-biochemical-adaptations-to-training)
+   - 7.1 [Endurance Training Adaptations](#71-endurance-training-adaptations)
+   - 7.2 [Resistance Training Adaptations](#72-resistance-training-adaptations)
+   - 7.3 [Molecular Signaling Pathways](#73-molecular-signaling-pathways)
 8. [Reactive Oxygen Species and Oxidative Stress](#8-reactive-oxygen-species-and-oxidative-stress)
 9. [Recovery Metabolism and Nutritional Biochemistry](#9-recovery-metabolism-and-nutritional-biochemistry)
+   - 9.1 [Excess Post-Exercise Oxygen Consumption (EPOC)](#91-excess-post-exercise-oxygen-consumption-epoc)
+   - 9.2 [Glycogen Resynthesis](#92-glycogen-resynthesis)
+   - 9.3 [Muscle Protein Synthesis and Recovery](#93-muscle-protein-synthesis-and-recovery)
 10. [Clinical Applications and Exercise as Medicine](#10-clinical-applications-and-exercise-as-medicine)
+    - 10.1 [Metabolic Disease](#101-metabolic-disease)
+    - 10.2 [Cardiovascular Health](#102-cardiovascular-health)
+    - 10.3 [Aging and Sarcopenia](#103-aging-and-sarcopenia)
 11. [Key Terms Related to Physical Activity and Exercise Prescription](#11-key-terms-related-to-physical-activity-and-exercise-prescription)
 12. [Conclusion](#12-conclusion)
+13. [References](#references)
+14. [One-Minute-Paper Topics](#one-minute-paper-topics)
 
 ---
 
@@ -66,14 +113,21 @@ ATP yields from complete oxidation are substantially higher than anaerobic pathw
 
 ### 2.4 Comparison of Energy Systems
 
+<Table>
+
 | System | Peak Power | ATP Rate | Capacity |
 |--------|-----------|----------|----------|
 | ATP-PCr | 5–10 seconds | Very High | Very Limited |
 | Glycolytic | 30–90 seconds | High | Limited |
 | Oxidative | >2–3 minutes | Moderate | Unlimited |
 
+<Fragment slot="caption">
+Comparison of the three energy systems by peak-power duration, ATP production rate and capacity.
+</Fragment>
+</Table>
+
 <Figure src={fig1} srcDark={fig1Dark} alt="Cellular Respiration">
-**Figure 3:** After uptake into the cell, glucose is phosphorylated and passes through the reactions of glycolysis down to the level of pyruvate. Under anaerobic conditions, pyruvate must be converted to lactate in order to regenerate the NAD⁺ required for glycolysis. Lactate is typically released by the cells. The energy yield amounts to 2 mol ATP per mol glucose. Under aerobic conditions, pyruvate is taken up into the mitochondria and converted there to acetyl-CoA by oxidative decarboxylation. This enters the citrate cycle, where it is broken down into CO₂ and reduction equivalents in the form of NADH/H⁺ and FADH₂. Their oxygen-dependent reoxidation yields water and is coupled to ATP synthesis from ADP and Pᵢ. Overall, the ATP yield is approximately 30 mol ATP per mol glucose. For the mechanisms of pyruvate oxidation, the citrate cycle, the respiratory chain, and oxidative phosphorylation.
+After uptake into the cell, glucose is phosphorylated and passes through the reactions of glycolysis down to the level of pyruvate. Under anaerobic conditions, pyruvate must be converted to lactate in order to regenerate the NAD⁺ required for glycolysis. Lactate is typically released by the cells. The energy yield amounts to 2 mol ATP per mol glucose. Under aerobic conditions, pyruvate is taken up into the mitochondria and converted there to acetyl-CoA by oxidative decarboxylation. This enters the citrate cycle, where it is broken down into CO₂ and reduction equivalents in the form of NADH/H⁺ and FADH₂. Their oxygen-dependent reoxidation yields water and is coupled to ATP synthesis from ADP and Pᵢ. Overall, the ATP yield is approximately 30 mol ATP per mol glucose.
 </Figure>
 
 ### 2.5 Common Metabolic Thresholds
@@ -274,11 +328,18 @@ While proteins contribute minimally to energy production during most exercise (t
 
 ### 3.4 Substrate Utilization at Different Exercise Intensities
 
+<Table>
+
 | Intensity | Primary Fuel | CHO:Fat Ratio |
 |-----------|-------------|---------------|
 | Low (&lt;40% VO₂max) | Fat (primarily FFA) | 30:70 |
 | Moderate (40–65% VO₂max) | Mixed (Fat + CHO) | 50:50 |
 | High (>75% VO₂max) | Carbohydrate (glycogen) | 85:15 |
+
+<Fragment slot="caption">
+Primary fuel and carbohydrate-to-fat ratio at low, moderate and high exercise intensities.
+</Fragment>
+</Table>
 
 [**Cellular Respiration - Slidedeck**](slides/slide-1/)
 
@@ -452,6 +513,8 @@ Type II fibers are subdivided into Type IIa (fast-twitch oxidative-glycolytic) a
 
 ### 6.3 Muscle Fiber Type Characteristics
 
+<Table>
+
 | Characteristic | Type I | Type IIa | Type IIx |
 |---------------|--------|----------|----------|
 | Contraction Speed | Slow | Fast | Very Fast |
@@ -459,6 +522,11 @@ Type II fibers are subdivided into Type IIa (fast-twitch oxidative-glycolytic) a
 | Mitochondrial Density | High | Moderate | Low |
 | Fatigue Resistance | High | Moderate | Low |
 | Primary Metabolism | Oxidative | Oxid-Glycolytic | Glycolytic |
+
+<Fragment slot="caption">
+Contractile and metabolic characteristics of the three skeletal-muscle fiber types.
+</Fragment>
+</Table>
 
 ---
 
@@ -636,23 +704,23 @@ As research continues to uncover the intricate signaling pathways and metabolic 
   A **One-Minute-Paper** (OMP) is a short, focused prompt that students answer in ~60 seconds at the end of a session to consolidate learning, surface misconceptions, and provide formative feedback.  When answering, be concise, specific, and use terminology from today's session.
 </Note>
 
-1. Compare the ATP-PCr, glycolytic, and oxidative energy systems in terms of peak power output, maximum duration, and ATP yield per glucose. Why is there an inverse relationship between power and capacity?
-2. Write and explain the creatine kinase reaction that regenerates ATP from PCr. Why can this system only sustain maximal effort for 5–10 seconds, and how long does complete PCr resynthesis take during recovery?
-3. Anaerobic glycolysis yields only 2–3 ATP per glucose, yet it is essential for high-intensity exercise. Explain why NAD⁺ regeneration — not ATP yield — is the critical bottleneck that lactate formation solves.
-4. According to Lehninger, glucose has four major metabolic fates: storage, structural polymers, glycolysis, and the pentose phosphate pathway. For each fate, give one example relevant to exercising muscle.
-5. Describe the three possible fates of pyruvate (aerobic oxidation, lactic acid fermentation, ethanol fermentation). Which fate dominates in exercising skeletal muscle above the anaerobic threshold, and why?
-6. The Pasteur effect describes increased glycolysis under anaerobic conditions; the Warburg effect describes aerobic glycolysis. Explain both effects and give one physiological scenario in sport where aerobic glycolysis is advantageous.
-7. Describe the Cori cycle: where does it occur, what substrate does it use, and what is its physiological role during prolonged exercise? At what exercise intensity does gluconeogenesis become quantitatively significant?
-8. At what exercise intensity (% V̇O₂max) do epinephrine and norepinephrine rise significantly? Describe their downstream effects on glycogenolysis, lipolysis, and immune cell mobilization.
-9. How does the insulin-to-glucagon ratio change during exercise, and what metabolic consequences does this have for hepatic glucose output and muscle substrate delivery?
-10. Describe the cell-cell lactate shuttle: which cells produce lactate (MCT4-expressing), which consume it (MCT1-expressing), and what is the concentration gradient that drives transport? Why is this shuttle important for understanding fatigue?
-11. The GPR81 receptor responds to extracellular lactate. What intracellular signalling cascade does this activate, and what are the downstream effects on lipolysis and adipose tissue metabolism?
-12. What is histone lactylation, and how does it connect intracellular lactate accumulation to gene expression changes? Name one gene programme that lactylation is thought to regulate.
-13. Compare slow-twitch (Type I) and fast-twitch (Type II) muscle fibers on four parameters: mitochondrial density, fatigue resistance, predominant energy system, and recruitment threshold. Which fiber type predominates in endurance-trained athletes?
-14. Describe how AMPK is activated by exercise (AMP/ATP ratio rise, Ca²⁺ signalling). What are AMPK's key downstream targets related to: (a) glucose uptake, (b) fat oxidation, and (c) mitochondrial biogenesis?
-15. Explain the mTOR pathway in the context of resistance exercise. What upstream signals activate mTORC1, and why is the anabolic window post-exercise important for timing protein intake?
-16. What environmental signals activate PGC-1α (ROS, AMP/ATP, Ca²⁺), and what downstream processes does it orchestrate? How does endurance training alter PGC-1α expression over time?
-17. ROS are produced continuously during exercise. At low concentrations they act as beneficial signalling molecules (Nrf2, PGC-1α activation); at high concentrations they cause cellular damage. Where is the tipping point, and how does training shift it?
-18. Define EPOC (excess post-exercise oxygen consumption) and list three metabolic processes it supports. Why is the fast EPOC component larger after high-intensity than low-intensity exercise?
-19. Describe the two phases of post-exercise glycogen resynthesis (rapid insulin-independent and slower insulin-dependent). What is the recommended carbohydrate intake window, and what enzyme is rate-limiting?
-20. Choose one chronic disease (type 2 diabetes, metabolic syndrome, or cardiovascular disease) and construct a mechanistic argument — using AMPK, PGC-1α, and GLUT4 translocation — for why regular aerobic exercise is a first-line intervention.
+1. Compare the phosphagen, glycolytic, and oxidative ATP systems by time course and yield.
+2. Why does the phosphagen system dominate in efforts shorter than ~10 seconds?
+3. Outline glycolysis in three steps and identify its net ATP yield.
+4. Describe the three main fates of pyruvate and the conditions that favour each.
+5. Explain the Warburg effect in one sentence and name one context in which it occurs in healthy tissue.
+6. What is gluconeogenesis and why is it important during prolonged exercise?
+7. Briefly explain the role of the pentose phosphate pathway during oxidative stress.
+8. How does substrate utilisation shift from rest to high-intensity exercise?
+9. Describe one action of catecholamines on exercise metabolism.
+10. Contrast the metabolic effects of insulin and glucagon during and after exercise.
+11. How do cortisol and growth hormone contribute to substrate mobilisation?
+12. Why is lactate now considered a fuel rather than a waste product?
+13. Explain the lactate shuttle concept in one sentence.
+14. What is the role of MCT transporters in lactate exchange between tissues?
+15. How does GPR81 signalling link lactate to anti-inflammatory effects?
+16. Define protein lactylation and explain its potential epigenetic relevance.
+17. Compare Type I and Type II muscle fibres in terms of biochemical and metabolic properties.
+18. Describe how AMPK and mTOR signalling represent opposing adaptive pathways to endurance vs. resistance training.
+19. What is EPOC and which biochemical processes drive it after high-intensity exercise?
+20. Give one clinical application of exercise biochemistry relevant to post-infection recovery.

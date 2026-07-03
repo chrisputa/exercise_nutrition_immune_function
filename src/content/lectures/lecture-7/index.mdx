@@ -8,6 +8,7 @@ draft: false
 ---
 
 import Figure from '../../../components/Figure.astro';
+import Table from '../../../components/Table.astro';
 import fig1 from '../../../assets/L05_Fig01_Measurement_bw.png';
 import fig1Dark from '../../../assets/generated/L05_Fig01_Measurement_bw_dark.png';
 import fig2a from '../../../assets/L05_Fig02a_METs_Intensity 2_bw.png';
@@ -85,17 +86,21 @@ This structured summary distils Topol's critical analysis into an evidence-based
 ## 2 Definitions and Measurement Methods
 
 <Figure src={fig1} srcDark={fig1Dark} alt="Measurement Comparison: CRF/METs vs VO₂ Max vs Wearable">
-**Figure 1.** Conceptual comparison of CRF/METs vs. VO₂ max measurement approaches. CRF can be assessed freely on any treadmill or ergometer, requires no specialist, and represents >99 % of the mortality outcome literature. VO₂ max requires a calibrated metabolic cart, exhaled-gas mask, and trained staff.
+Conceptual comparison of CRF/METs vs. VO₂ max measurement approaches. CRF can be assessed freely on any treadmill or ergometer, requires no specialist, and represents >99 % of the mortality outcome literature. VO₂ max requires a calibrated metabolic cart, exhaled-gas mask, and trained staff.
 </Figure>
 
 ### 2.1 Cardiorespiratory Fitness (CRF)
 
 CRF reflects the integrated capacity of the cardiovascular, pulmonary, and musculoskeletal systems to sustain aerobic exercise [1]. It is assessed via graded exercise testing and expressed as metabolic equivalents of task (METs), where 1 MET equals the resting metabolic rate.
 
-<Figure src={fig2a} srcDark={fig2aDark} alt="MET Intensity Classification">
-**Figure 2a, b.** MET intensity classification and heart-rate estimation formula. MET ≈ 0.05 × HR_bpm + 2; every 10-bpm HR increment corresponds to approximately 1 additional MET. Light &lt;3, Moderate 3–6, Vigorous >6 METs [2].
+<Figure
+	src={fig2a}
+	srcDark={fig2aDark}
+	alt="MET Intensity Classification"
+	panels={[{ src: fig2b, srcDark: fig2bDark, alt: 'MET Heart-Rate Estimation Formula' }]}
+>
+MET intensity classification and heart-rate estimation formula. MET ≈ 0.05 × HR_bpm + 2; every 10-bpm HR increment corresponds to approximately 1 additional MET. Light &lt;3, Moderate 3–6, Vigorous >6 METs [2].
 </Figure>
-<Figure src={fig2b} srcDark={fig2bDark} alt="MET Heart-Rate Estimation Formula"/>
 
 ### 2.2 VO₂ Max — Direct Laboratory Measurement
 
@@ -103,10 +108,14 @@ Maximal oxygen uptake (VO₂ max) is the ceiling of aerobic power, determined vi
 
 ### 2.3 VO₂ Max — Wearable Estimation
 
-<Figure src={fig3a} srcDark={fig3aDark} alt="Wearable Accuracy">
-**Figure 3a, b.** Consumer smartwatches impute VO₂ max from population-based algorithms (heart rate + GPS/accelerometry), not gas exchange [3]. Accuracy is poor.
+<Figure
+	src={fig3a}
+	srcDark={fig3aDark}
+	alt="Wearable Accuracy"
+	panels={[{ src: fig3b, srcDark: fig3bDark, alt: 'Wearable Accuracy' }]}
+>
+Consumer smartwatches impute VO₂ max from population-based algorithms (heart rate + GPS/accelerometry), not gas exchange [3]. Accuracy is poor.
 </Figure>
-<Figure src={fig3b} srcDark={fig3bDark} alt="Wearable Accuracy"/>
 
 ---
 
@@ -115,17 +124,21 @@ Maximal oxygen uptake (VO₂ max) is the ceiling of aerobic power, determined vi
 ### 3.1 Meta-Analysis: 33 Studies, 102,980 Participants (JAMA 2009)
 
 <Figure src={fig4} srcDark={fig4Dark} alt="CRF and Mortality Risk — JAMA 2009">
-**Figure 4.** Cardiorespiratory fitness and mortality risk. Each 1-MET increment in exercise capacity is associated with a **14–15 % reduction in all-cause mortality**. Individuals achieving ≥7.9 METs showed markedly lower all-cause and cardiovascular mortality. Shaded area = 95 % CI. Meta-analysis of 33 studies (n = 102,980) [4].
+Cardiorespiratory fitness and mortality risk. Each 1-MET increment in exercise capacity is associated with a **14–15 % reduction in all-cause mortality**. Individuals achieving ≥7.9 METs showed markedly lower all-cause and cardiovascular mortality. Shaded area = 95 % CI. Meta-analysis of 33 studies (n = 102,980) [4].
 </Figure>
 
 The landmark Kodama et al. [4] meta-analysis established METs as a potent and graded prognostic variable for all-cause and cardiovascular mortality.
 
 ### 3.2 Cleveland Clinic Cohort: 122,007 Patients (JAMA Network Open 2018)
 
-<Figure src={fig5a} srcDark={fig5aDark} alt="Cleveland Clinic: All-Cause Mortality Men vs Women">
-**Figure 5a, b.** All-cause mortality hazard ratios by fitness category, Cleveland Clinic cohort. The above-average vs. below-average hazard ratio of 1.41 equates to the excess mortality risk of **smoking or diabetes**. The Low-to-Elite gradient exceeds 5-fold. The protective effect is more pronounced in women. No upper mortality risk at any fitness level [5].
+<Figure
+	src={fig5a}
+	srcDark={fig5aDark}
+	alt="Cleveland Clinic: All-Cause Mortality Men vs Women"
+	panels={[{ src: fig5b, srcDark: fig5bDark, alt: 'Cleveland Clinic: Mortality Gradient' }]}
+>
+All-cause mortality hazard ratios by fitness category, Cleveland Clinic cohort. The above-average vs. below-average hazard ratio of 1.41 equates to the excess mortality risk of **smoking or diabetes**. The Low-to-Elite gradient exceeds 5-fold. The protective effect is more pronounced in women. No upper mortality risk at any fitness level [5].
 </Figure>
-<Figure src={fig5b} srcDark={fig5bDark} alt="Cleveland Clinic: Mortality Gradient"/>
 
 > **Cleveland Clinic Key Results**
 >
@@ -137,10 +150,14 @@ The landmark Kodama et al. [4] meta-analysis established METs as a potent and gr
 
 ### 3.3 Veterans Affairs Cohort: 750,000+ Veterans (Kokkinos et al. 2022)
 
-<Figure src={fig6a} srcDark={fig6aDark} alt="VA Cohort: Kokkinos 2022 Bar Chart">
-**Figure 6a, b.** All-cause mortality hazard ratios across six fitness categories in the US Veterans Affairs cohort (n = 750,302; mean follow-up 10.2 years). The Very-Low to Very-High gradient is ≈4-fold. No ceiling mortality risk at highest fitness. Error bars = 95 % CI [4].
+<Figure
+	src={fig6a}
+	srcDark={fig6aDark}
+	alt="VA Cohort: Kokkinos 2022 Bar Chart"
+	panels={[{ src: fig6b, srcDark: fig6bDark, alt: 'VA Cohort: Kokkinos 2022 Log Scale' }]}
+>
+All-cause mortality hazard ratios across six fitness categories in the US Veterans Affairs cohort (n = 750,302; mean follow-up 10.2 years). The Very-Low to Very-High gradient is ≈4-fold. No ceiling mortality risk at highest fitness. Error bars = 95 % CI [4].
 </Figure>
-<Figure src={fig6b} srcDark={fig6bDark} alt="VA Cohort: Kokkinos 2022 Log Scale"/>
 
 ---
 
@@ -148,11 +165,17 @@ The landmark Kodama et al. [4] meta-analysis established METs as a potent and gr
 
 ### 4.1 Meta-Analysis: 42 Studies, CRF vs. VO₂ Max (2024)
 
-<Figure src={fig7a} srcDark={fig7aDark} alt="Meta-Analysis 2024: Participants">
-**Figure 7a, b, c.** Data imbalance between METs-based CRF and direct VO₂ max evidence. **a**: >99 % of outcome-linked participants contributed MET data; &lt;1 % contributed direct VO₂ max data. **b**: Study count comparison. **c**: Point estimates for cardiovascular mortality reduction are remarkably similar (≈14 %), confirming construct validity — but the evidence base rests almost entirely on METs. (Swain & Franklin, *J Sci Med Sport* 2024 [4]; 234-fold more participants in the MET arm.)
+<Figure
+	src={fig7a}
+	srcDark={fig7aDark}
+	alt="Meta-Analysis 2024: Participants"
+	panels={[
+		{ src: fig7b, srcDark: fig7bDark, alt: 'Meta-Analysis 2024: Studies' },
+		{ src: fig7c, srcDark: fig7cDark, alt: 'Meta-Analysis 2024: Effect Size' },
+	]}
+>
+Data imbalance between METs-based CRF and direct VO₂ max evidence. **a**: >99 % of outcome-linked participants contributed MET data; &lt;1 % contributed direct VO₂ max data. **b**: Study count comparison. **c**: Point estimates for cardiovascular mortality reduction are remarkably similar (≈14 %), confirming construct validity — but the evidence base rests almost entirely on METs. (Swain & Franklin, *J Sci Med Sport* 2024 [4]; 234-fold more participants in the MET arm.)
 </Figure>
-<Figure src={fig7b} srcDark={fig7bDark} alt="Meta-Analysis 2024: Studies"/>
-<Figure src={fig7c} srcDark={fig7cDark} alt="Meta-Analysis 2024: Effect Size"/>
 
 > **Critical Finding: Data Imbalance**
 >
@@ -170,20 +193,27 @@ In selected clinical populations, direct VO₂ max measurement has demonstrated 
 
 ## 5 Practical Recommendations
 
-**Evidence-Based Fitness Monitoring — Summary Table**
+<Table>
 
-**Metric** | **Recommendation** |
+| **Metric** | **Recommendation** |
 |---|---|
 | **METs (CRF)** | **Preferred for most healthy adults.** Free, universally accessible, best studied for all-cause and cardiovascular mortality outcomes (>99 % of evidence base). Use treadmill/bicycle speed-incline charts, Bruce protocol, or HR formula. |
 | **VO₂ Max (lab)** | Reserve for: (a) high-performance athletes; (b) heart failure/pulmonary hypertension risk stratification; (c) pre-operative evaluation. |
 | **Wearable VO₂ Max** | **Not recommended** for clinical or lifestyle decision-making. MAPE 7–16 %, directional biases, and extrinsic confounders render it unreliable. |
 | **Strength & Balance** | Include alongside CRF. Combined aerobic + strength training is superior to aerobic training alone for mortality reduction [5]. |
 
+<Fragment slot="caption">
+Evidence-based fitness-monitoring recommendations by metric.
+</Fragment>
+</Table>
+
 Topol's bottom line: *"Perhaps the better strategy is to be as physically active as possible and **not worry about any metric**!"* The emphasis should be on building a comprehensive, enjoyable activity habit rather than chasing a single number from a device whose accuracy is demonstrably limited.
 
 ---
 
 ## 6 Summary Comparison: CRF vs. VO₂ Max
+
+<Table>
 
 | **Dimension** | **CRF / METs** | **VO₂ Max** |
 |---|---|---|
@@ -196,6 +226,11 @@ Topol's bottom line: *"Perhaps the better strategy is to be as physically active
 | AHA recommendation | Clinical vital sign [1] | Niche clinical/sports use |
 | Target population | All healthy adults | Elite athletes; HF/PH patients; pre-op |
 | AI platform misuse | Rare | Frequent |
+
+<Fragment slot="caption">
+Head-to-head comparison of CRF/METs and VO₂ max across measurement, cost, evidence base, and application.
+</Fragment>
+</Table>
 
 ## References
 - [1] Ross R, Blair SN, Arena R, et al. Importance of assessing cardiorespiratory fitness in clinical practice: a case for fitness as a clinical vital sign — a scientific statement from the American Heart Association. *Circulation*. 2016;134(24):e653–e699. [https://doi.org/10.1161/CIR.0000000000000461](https://doi.org/10.1161/CIR.0000000000000461)

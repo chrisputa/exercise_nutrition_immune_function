@@ -8,6 +8,7 @@ draft: false
 ---
 
 import Figure from '../../../components/Figure.astro';
+import Table from '../../../components/Table.astro';
 import fig1 from '../../../assets/L02_Fig1_Limits_physical_performance_capacity_001_age_mortality_small_bw.png';
 import fig1Dark from '../../../assets/generated/L02_Fig1_Limits_physical_performance_capacity_001_age_mortality_small_bw_dark.png';
 import fig2 from '../../../assets/L02_Fig2_Limits_physical_performance_capacity.002_power_running_speed_small_bw.png';
@@ -40,6 +41,7 @@ import fig15 from '../../../assets/L02_Fig15_Exercise_Strain_lactate_HPA_SNS_CHO
 import fig15Dark from '../../../assets/generated/L02_Fig15_Exercise_Strain_lactate_HPA_SNS_CHO_Fat_AA_bw_dark.png';
 import { Note } from '../../../components/MarginNote/index.js';
 
+
 ## Table of Contents
 
 1. [Protection Against Violation of Integrity — Immunity and Inflammatory Regulation](#1-protection-against-violation-of-integrity--immunity-and-inflammatory-regulation)
@@ -50,10 +52,14 @@ import { Note } from '../../../components/MarginNote/index.js';
    - 2.4 [Sports Medical Definition](#24-sports-medical-definition-of-physical-performance)
    - 2.5 [Determinants](#25-determinants-of-physical-performance)
    - 2.6 [Extended Definition](#26-extended-definition-of-physical-performance)
+   - 2.7 [How Fast Can People Run for How Long?](#27-how-fast-can-people-run-for-how-long)
+   - 2.8 [How Fast Is the Energy Supply at Different Exercise Intensities?](#28-how-fast-is-the-energy-supply-at-different-exercise-intensities)
 3. [Energy Balance](#3-energy-balance)
    - 3.1 [What Is Energy and What Is It For?](#31-what-is-energy-and-what-is-it-for)
    - 3.2 [How Does Energy Get Into the Organism?](#32-how-does-energy-get-into-the-organism)
    - 3.3 [Energy Transfer — Macronutrients](#33-energy-transfer--macronutrients)
+4. [References](#references)
+5. [One-Minute-Paper Topics](#one-minute-paper-topics)
 
 [**Lecture - Slidedeck**](slides/).
 
@@ -182,12 +188,14 @@ When dealing with the limits of physical performance, a key question is whether 
 
 Beyond the narrow biological-physical definition, physical performance corresponds to the value created through physical work and energy consumption (movements, exercise, training, sport) and measured against the goal of action with a measurable result and a minimum level. Performance depends on biological, psychological and social resources, external stress and internal stress as well as the **willingness to perform** [1].
 
-<Figure src={fig2} srcDark={fig2Dark} alt="Limits of physical performance capacity — Power and running speed">
-**Figure: Limits of performance with age:**
-Relating MET, V̇O₂max, physical activity behaviour and mortality/morbidity [%] across the lifespan — from physical inactivity (1 MET, 3.5 mL·min⁻¹·kg⁻¹) to very fast running (~26 METs, ~90 mL·min⁻¹·kg⁻¹) — demonstrates age-dependent changes in maximal performance capacity.
+<Figure
+	src={fig2}
+	srcDark={fig2Dark}
+	alt="Limits of physical performance capacity — Power and running speed"
+	panels={[{ src: fig1, srcDark: fig1Dark, alt: 'Limits of physical performance capacity — Age and mortality' }]}
+>
+Limits of performance with age: relating MET, V̇O₂max, physical activity behaviour and mortality/morbidity [%] across the lifespan — from physical inactivity (1 MET, 3.5 mL·min⁻¹·kg⁻¹) to very fast running (~26 METs, ~90 mL·min⁻¹·kg⁻¹) — demonstrates age-dependent changes in maximal performance capacity.
 </Figure>
-
-<Figure src={fig1} srcDark={fig1Dark} alt="Limits of physical performance capacity — Age and mortality"/>
 
 ### 2.7 How Fast Can People Run for How Long?
 
@@ -197,6 +205,8 @@ The organism has an answer ready for high and low running speeds through differe
 
 Reference performance parameters (approximate maxima):
 
+<Table>
+
 | Parameter | Maximum | Mean | Minimum |
 |---|---|---|---|
 | V̇O₂max (mL·min⁻¹·kg⁻¹) | ~90 | ~45 | ~3.5 |
@@ -205,9 +215,16 @@ Reference performance parameters (approximate maxima):
 | Sprint top speed | ~12 m·s⁻¹ | ~6 m·s⁻¹ | 0 m·s⁻¹ |
 | Marathon mean speed | ~6 m·s⁻¹ | ~3 m·s⁻¹ | 0 m·s⁻¹ |
 
+<Fragment slot="caption">
+Approximate maximal, mean and minimal reference values for selected strength and endurance performance parameters.
+</Fragment>
+</Table>
+
 ### 2.8 How Fast Is the Energy Supply at Different Exercise Intensities?
 
 The speed of muscular contraction depends on the speed of energy supply [2]:
+
+<Table>
 
 | Duration | Energy source(s) | Examples |
 |---|---|---|
@@ -216,6 +233,11 @@ The speed of muscular contraction depends on the speed of energy supply [2]:
 | Up to ~90 seconds | ATP + PCr + anaerobic glycolysis (lactate formation) | Long sprints 200–400 m, 100 m swimming |
 | ~800 m | ~50 % anaerobic + ~50 % aerobic | Middle-distance running |
 | Longer distances | Aerobic glycolysis → β-oxidation (increasing proportion) | Long-distance running, endurance events |
+
+<Fragment slot="caption">
+Predominant energy-supply systems as a function of effort duration, with representative sporting examples.
+</Fragment>
+</Table>
 
 **Energy flow rates:**
 - ATP and creatine phosphate capacity: ~5 mmol·g⁻¹ | &lt;2–3 s; ~19 mmol·g⁻¹ | &lt;5–8 s
@@ -229,55 +251,38 @@ The speed of muscular contraction depends on the speed of energy supply [2]:
 - Aerobic β-oxidation: ~0.24–0.4
 
 <Figure src={fig3} srcDark={fig3Dark} alt="ATP flow rate cycling">
-**Figure: Adenosine-triphosphate (ATP) flow rates versus time. Abbreviations: P—cycling performance on a bicycle ergometer, RPE: Ratings of perceived exertion (Borg scale: 6–20).**
+Adenosine-triphosphate (ATP) flow rates versus time. P — cycling performance on a bicycle ergometer; RPE — ratings of perceived exertion (Borg scale 6–20).
 </Figure>
 
 <Figure src={fig4} srcDark={fig4Dark} alt="Energy time oxygen">
-**Figure: Time course of energy generation.**
+Time course of energy generation.
 </Figure>
 
-<Figure src={fig5} srcDark={fig5Dark} alt="Performance lactate 4h">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
+<Figure
+	src={fig5}
+	srcDark={fig5Dark}
+	alt="Performance lactate 4h"
+	panels={[
+		{ src: fig6, srcDark: fig6Dark, alt: 'Performance energy lactate 4h' },
+		{ src: fig7, srcDark: fig7Dark, alt: 'Performance energy heart rate 4h' },
+		{ src: fig8, srcDark: fig8Dark, alt: 'Performance energy 4h' },
+		{ src: fig9, srcDark: fig9Dark, alt: 'Performance cortisol 4h' },
+		{ src: fig10, srcDark: fig10Dark, alt: 'Performance cortisol 4h amount' },
+		{ src: fig11, srcDark: fig11Dark, alt: 'Performance adrenaline 4h' },
+		{ src: fig12, srcDark: fig12Dark, alt: 'Performance adrenaline 4h amount' },
+		{ src: fig13, srcDark: fig13Dark, alt: 'Performance 100s lactate adrenaline cortisol' },
+	]}
+>
+Cycle-ergometer exercise of different intensities and durations, showing performance, lactate generation and hormone secretion built up step by step. Male subjects with a V̇O₂max of 60–65 ml·min⁻¹·kg⁻¹.
 </Figure>
 
-<Figure src={fig6} srcDark={fig6Dark} alt="Performance energy lactate 4h">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
-</Figure>
-
-<Figure src={fig7} srcDark={fig7Dark} alt="Performance energy heart rate 4h">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
-</Figure>
-
-<Figure src={fig8} srcDark={fig8Dark} alt="Performance energy 4h">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
-</Figure>
-
-<Figure src={fig9} srcDark={fig9Dark} alt="Performance cortisol 4h">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
-</Figure>
-
-<Figure src={fig10} srcDark={fig10Dark} alt="Performance cortisol 4h amount">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
-</Figure>
-
-<Figure src={fig11} srcDark={fig11Dark} alt="Performance adrenaline 4h">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
-</Figure>
-
-<Figure src={fig12} srcDark={fig12Dark} alt="Performance adrenaline 4h amount">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
-</Figure>
-
-<Figure src={fig13} srcDark={fig13Dark} alt="Performance 100s lactate adrenaline cortisol">
-**Figure: Cycle ergometer exercise of different intensities and duration. Outlined are performance, lactate generation, hormone secretion. Male subjects with a VO2max of 60–65 ml·min⁻¹·kg⁻¹.**
-</Figure>
-
-<Figure src={fig14} srcDark={fig14Dark} alt="Exercise Strain lactate HPA SNS CHO Fat AA">
-**Figure: Overview of hormonal regulation and energy supply with different loads and durations of load. RPE: Rating of perceived exertion (Borg scale value).**
-</Figure>
-
-<Figure src={fig15} srcDark={fig15Dark} alt="Exercise Strain lactate CHO FAT AA">
-**Figure: Overview of hormonal regulation and energy supply with different loads and durations of load. RPE: Rating of perceived exertion (Borg scale value).**
+<Figure
+	src={fig14}
+	srcDark={fig14Dark}
+	alt="Exercise Strain lactate HPA SNS CHO Fat AA"
+	panels={[{ src: fig15, srcDark: fig15Dark, alt: 'Exercise Strain lactate CHO FAT AA' }]}
+>
+Overview of hormonal regulation and energy supply at different loads and load durations. RPE — rating of perceived exertion (Borg scale value).
 </Figure>
 
 ---
@@ -308,6 +313,8 @@ Carbon, hydrogen, oxygen, and nitrogen represent the basic structural units for 
 
 **Gross energy values (physical calorific values):**
 
+<Table>
+
 | Nutrient | Physical energy value (kcal·g⁻¹) | Physical energy value (kJ·g⁻¹) | Physiological energy value (kcal·g⁻¹) |
 |---|---|---|---|
 | Fat | 9.3 | 38.9 | 9.3 |
@@ -315,6 +322,11 @@ Carbon, hydrogen, oxygen, and nitrogen represent the basic structural units for 
 | Carbohydrate | 4.1 | 17.2 | 4.1 |
 | Glucose | 3.8 | 15.7 | 3.8 |
 | Ethanol | 7.1 | 29.7 | 7.1 |
+
+<Fragment slot="caption">
+Physical (gross) and physiological energy values of the macronutrients, glucose and ethanol.
+</Fragment>
+</Table>
 
 Coefficients of digestibility average 97 % for carbohydrates, 95 % for lipids, and 92 % for proteins. The complete breakdown of 1 mole of glucose liberates 689 kcal of energy; of this, approximately 34 % is conserved in ATP bonds.
 
@@ -356,23 +368,23 @@ The muscle-derived amino acid **alanine** plays a key role via gluconeogenesis i
   A **One-Minute-Paper** (OMP) is a short, focused prompt that students answer in ~60 seconds at the end of a session to consolidate learning, surface misconceptions, and provide formative feedback.  When answering, be concise, specific, and use terminology from today's session.
 </Note>
 
-1. Compare innate and adaptive immunity on three dimensions: speed of response, specificity, and immunological memory. Give one example of an exercise-relevant cell from each branch.
-2. Outline the four temporal phases of an acute inflammatory response (immediate → early → late → resolution). Which phase is most relevant to exercise recovery, and why?
-3. Why is acute inflammation considered protective while chronic inflammation is pathological? Name two chronic diseases linked to low-grade systemic inflammation.
-4. At rest, IL-6 is primarily pro-inflammatory; during exercise it acts as an anti-inflammatory myokine. What determines which role predominates — the source of IL-6 or its concentration, or both?
-5. Describe the U- (or J-) shaped relationship between exercise volume/intensity and infection risk. What is the "open-window" hypothesis, and how does it explain susceptibility after extreme exercise?
-6. Formulate the sports-medical definition of physical performance from both a biological-physical perspective and a biochemical energy-supply perspective. Which definition is more relevant for exercise prescription?
-7. The lecture distinguishes primary determinants (structure and functionality) from secondary determinants (ageing, health, genetics, lifestyle, etc.). Give two examples where secondary determinants override primary ones.
-8. Why does maximal oxygen uptake decline with ageing even in regularly active individuals? Name two structural and two functional reasons for this trajectory.
-9. Match each exercise duration (< 2 s; up to 8 s; up to 90 s; > 3 min) with its primary energy system and a sport example. What determines the transition point between systems?
-10. Rank the four energy pathways (ATP-PCr, anaerobic glycolysis, aerobic glycolysis, β-oxidation) by their ATP flow rate (mmol·kg⁻¹·s⁻¹). What is the trade-off between power and capacity?
-11. Define basal metabolic rate (BMR) and resting metabolic rate (RMR). Why is RMR always slightly higher than BMR, and which factor has the greatest influence on TDEE in active individuals?
-12. Compare the physical calorific values of fat, protein, carbohydrate, and ethanol (kcal·g⁻¹). Why does fat provide more ATP per gram despite having the same physiological calorific value as carbohydrate per mole of glucose?
-13. Explain why carbohydrates serve as the dominant substrate during high-intensity exercise. What happens physiologically when muscle glycogen is depleted during prolonged effort?
-14. Describe the role of muscle-derived alanine in sustaining blood glucose during prolonged exercise. How does this differ from the Cori cycle, and at what exercise intensity does it become significant?
-15. At which exercise intensity (% V̇O₂max) does fat contribute maximally to total energy supply? Why does its relative contribution decrease at intensities above the anaerobic threshold?
-16. Under what conditions does protein contribute significantly to fuel during exercise? What is the RDA for protein in the general population, and why do intensively training athletes require more?
-17. Using the multi-panel figures from the lecture, describe how blood lactate, cortisol, and adrenaline change across exercise intensities from 50% to maximal effort. What does the cortisol response indicate immunologically?
-18. The extended definition incorporates biological, psychological, and social resources, as well as "willingness to perform." Give an example from clinical practice where this broader definition is more useful than the physiological one.
-19. At what decade of life does V̇O₂max typically peak in untrained adults? How does regular exercise modify the trajectory of age-related performance decline, and what is the relevance for morbidity/mortality?
-20. Describe the roles of catecholamines, insulin/glucagon, and cortisol in regulating substrate mobilization during exercise. At what exercise intensity do catecholamine levels rise significantly, and what is the immunological consequence?
+1. In one sentence, what is the central function of the immune system in the context of "bodily integrity"?
+2. Distinguish innate from adaptive immunity using one cell type and one mechanism for each.
+3. Why is acute inflammation considered a protective response while chronic inflammation is considered pathological?
+4. Give one example of how a single bout of moderate exercise transiently modulates immune cell trafficking.
+5. Explain the "open window" hypothesis and why it remains debated.
+6. How does habitual moderate exercise differ from prolonged strenuous exercise in its effect on immune function?
+7. Define "limits of performance" from a physiological perspective and name one limiting system.
+8. How does ageing alter the determinants of physical performance capacity?
+9. Why is age-related mortality risk now included in extended definitions of physical performance?
+10. State the first law of thermodynamics applied to human energy balance in one sentence.
+11. Why is energy balance better described as a dynamic equilibrium than a static equation?
+12. Compare the ATP yield per gram of carbohydrate, lipid, and protein and note one reason fats yield more.
+13. Outline one entry point at which carbohydrates feed into ATP production during exercise.
+14. Why is lipid oxidation favoured at lower exercise intensities?
+15. Under what conditions does protein become a meaningful energy substrate during exercise?
+16. Describe one hormonal signal that links nutrient intake to energy utilisation during exercise.
+17. How might chronic energy deficiency (e.g., RED-S) affect both immune function and performance?
+18. Give one practical reason why understanding immune-exercise interactions matters for clinical populations such as Long COVID patients.
+19. Which limit of performance do you think is most underestimated by recreational athletes, and why?
+20. What concept from today's lecture would you most like to see illustrated with real data next time?

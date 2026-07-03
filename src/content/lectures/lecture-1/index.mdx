@@ -9,6 +9,7 @@ draft: false
 ---
 
 import Figure from '../../../components/Figure.astro';
+import Table from '../../../components/Table.astro';
 import fig1 from '../../../assets/figure1_Homeostasis_Immune_color.png';
 import fig1Dark from '../../../assets/generated/figure1_Homeostasis_Immune_color_dark.png';
 import fig2 from '../../../assets/figure2_ID40_Heart_rate.png';
@@ -25,9 +26,30 @@ import { Note } from '../../../components/MarginNote/index.js';
 ## Table of Contents
 
 1. [Key Terms of Physical Activity and Exercise](#1-key-terms-of-physical-activity-and-exercise-in-relation-to-energy-expenditure-and-metabolic-strain)
+   - [Definition of Physical Activity](#definition-of-physical-activity)
+   - [Energy Expenditure](#energy-expenditure)
+   - [Metabolic Strain and Physiological Responses](#metabolic-strain-and-physiological-responses)
 2. [Short-Term Balancing of Homeostasis](#2-short-term-balancing-of-homeostasis)
+   - [Concept of Homeostasis](#concept-of-homeostasis)
+   - [Acute Responses to Exercise](#acute-responses-to-exercise)
+   - [Recovery and Return to Baseline](#recovery-and-return-to-baseline)
 3. [Homeostasis and Hormesis](#3-homeostasis-and-hormesis)
+   - [From Homeostatic Regulation to Hormetic Adaptation](#from-homeostatic-regulation-to-hormetic-adaptation)
+   - [Hormetic Stress Response](#hormetic-stress-response)
+   - [The Dual Identity of Inflammatory Mediators](#the-dual-identity-of-inflammatory-mediators)
+   - [Molecular Mediators of the Hormetic Response](#molecular-mediators-of-the-hormetic-response)
+   - [Biphasic Dose-Response and the J-Curve of Immune Function](#biphasic-dose-response-and-the-j-curve-of-immune-function)
+   - [Complementary Temporal Scales](#complementary-temporal-scales)
+   - [Pathological Contexts: ME/CFS, Long COVID, and Post-Exertional Malaise](#pathological-contexts-mecfs-long-covid-and-post-exertional-malaise)
 4. [State of Sleep and Wakefulness](#4-state-of-sleep-and-wakefulness)
+   - [Sleep Architecture and Physiology](#sleep-architecture-and-physiology)
+   - [Sleep Cycles and Duration](#sleep-cycles-and-duration)
+   - [Physiological Functions of Sleep](#physiological-functions-of-sleep)
+   - [Relationship Between Exercise and Sleep](#relationship-between-exercise-and-sleep)
+5. [References](#references)
+6. [One-Minute-Paper Topics](#one-minute-paper-topics)
+
+[**Lecture - Slidedeck**](slides/).
 
 ---
 
@@ -92,6 +114,8 @@ measures are obtained via the same instruments (DEXA, BIA, hydrostatic weighing)
 
 The key conceptual distinctions are summarised in Table 1:
 
+<Table>
+
 | | FFM | LBM |
 |---|---|---|
 | Includes essential fat? | No | Yes (~3 % ♂ / ~12 % ♀) |
@@ -101,9 +125,12 @@ The key conceptual distinctions are summarised in Table 1:
 | Cunningham (1980) original wording | — | Uses *LBM* |
 | Ten Haaf & Weijs (2014) | Uses *FFM* | — |
 
-*Table 1. Conceptual comparison of fat-free mass (FFM) and lean body mass (LBM) in the context
-of BMR prediction equations.*
+<Fragment slot="caption">
+Conceptual comparison of fat-free mass (FFM) and lean body mass (LBM) in the context of BMR prediction equations.
+</Fragment>
+</Table>
 
+<Table>
 
 | Equation | Year | Formula | Input variables | Validated population |
 |---|---|---|---|---|
@@ -113,14 +140,10 @@ of BMR prediction equations.*
 | **Ten Haaf & Weijs** (FFM-based) | 2014 | REE = 370 + (21.6 × FFM) | Fat-free mass (kg) | Recreational athletes (18–35 y) |
 | **Ten Haaf & Weijs** (weight-based) | 2014 | REE = (25.9 × BW) − 284 | Body weight (kg) | Recreational athletes (18–35 y); no body composition data required |
 
-*All values in kcal/day. LBM = lean body mass; FFM = fat-free mass; BW = body weight.*
-*Note: LBM and FFM are related but not identical — LBM includes a small fraction of essential fat
-(~3 % in males, ~12 % in females) absent from FFM. Cunningham (1980) used LBM; Ten Haaf & Weijs
-(2014) used FFM. Both measures are typically obtained via DEXA, BIA, or hydrostatic weighing;
-substituting one for the other introduces only negligible error in most athletic populations.*
-
-*Table 2. Comparison of Estimation Formulas of Basal Metabolic Rate with special relevance for
-athletic populations (adapted from [17–20]).*
+<Fragment slot="caption">
+Comparison of estimation formulas of basal metabolic rate with special relevance for athletic populations (adapted from [17–20]). All values in kcal/day; LBM = lean body mass, FFM = fat-free mass, BW = body weight. Cunningham (1980) used LBM, Ten Haaf & Weijs (2014) used FFM; substituting one for the other introduces only negligible error in most athletic populations.
+</Fragment>
+</Table>
 
 #### Total Energy Expenditure across the Human Life Course
 
@@ -185,7 +208,7 @@ The organism responds to metabolic strain through acute physiological adjustment
 ### Concept of Homeostasis
 
 <Figure src={fig1} srcDark={fig1Dark} alt="Homeostasis">
-**Figure 1 - Homeostasis refers to the dynamic equilibrium of the internal environment, maintained through regulatory mechanisms that counteract disturbances. Physical activity is a significant disturbance to homeostasis, triggering rapid regulatory responses.**
+Homeostasis refers to the dynamic equilibrium of the internal environment, maintained through regulatory mechanisms that counteract disturbances. Physical activity is a significant disturbance to homeostasis, triggering rapid regulatory responses.
 </Figure>
 
 ### Acute Responses to Exercise
@@ -210,10 +233,14 @@ When the organism engages in physical activity, multiple physiological systems a
 - **Blood pressure rises** — systolic increases more than diastolic.
 - **Blood flow redistribution** — 20–25 % of cardiac output at rest goes to muscles; during exercise, this increases to 85–90 %.
 
-<Figure src={fig2} srcDark={fig2Dark} alt="Heart rate">
-**Figure 2 & 3 - Example for acute disturbance of the homeostasis by acute physical stress. Heart rate and ventilation increase during exercise and return after the end of the exercise. Light blue lines: Physical rest before exercise, red lines: Incremental graded maximal cycle ergometer exercise, dark blue lines: physical rest after the end of exercise.**
+<Figure
+	src={fig2}
+	srcDark={fig2Dark}
+	alt="Heart rate"
+	panels={[{ src: fig3, srcDark: fig3Dark, alt: 'Ventilation' }]}
+>
+Example for acute disturbance of the homeostasis by acute physical stress. Heart rate and ventilation increase during exercise and return after the end of the exercise. Light blue lines: physical rest before exercise, red lines: incremental graded maximal cycle ergometer exercise, dark blue lines: physical rest after the end of exercise.
 </Figure>
-<Figure src={fig3} srcDark={fig3Dark} alt="Ventilation"/>
 
 #### Respiratory Response
 - **Breathing frequency increases** to enhance gas exchange.
@@ -261,11 +288,11 @@ More formally, "hormesis refers to adaptive responses of biological systems to m
 Skeletal muscle and the broader physiological system perpetually encounter intrinsic mechanical and metabolic challenges imposed by physical activity. To cope with exercise-induced stressors — including mechanical loading, metabolic perturbation, oxidative stress, hypoxia, muscle damage, and thermal stress arising from sustained exertion — living organisms have evolved adaptive, protective training responses. At the molecular, cellular, and whole-organism levels, these responses share common regulatory features collectively termed 'exercise stress' and rely on evolutionarily conserved, exercise-responsive transcriptional networks [16]. The pattern of exercise-induced adaptations is dictated not only by the specific type of training stimulus (e.g., resistance, endurance, or concurrent exercise) but also by its intensity, frequency, and duration — variables central to exercise programming. Each of these factors, alone or in combination, can transiently disrupt physiological homeostasis and impair functional capacity. Sub-maximal training loads, however, elicit beneficial adaptive responses — including muscle hypertrophy, mitochondrial biogenesis, and improved cardiovascular function — that attenuate the physiological cost of subsequent bouts of the same or related exercise stress. This dose-dependent, biphasic adaptive property is known as 'hormesis' [15, 16]. A hallmark of exercise-induced hormesis is that the adaptive response to a given exercise stressor can extend cross-protective effects against future, and apparently unrelated, forms of physiological stress. The architecture of the exercise-responsive transcriptional network, whereby distinct modes of training regulate overlapping profiles of effector genes — including those encoding heat shock proteins, pro- and anti-inflammatory immune responses, antioxidant enzymes, and angiogenic factors — provides a compelling mechanistic explanation for this phenomenon [16].
 
 <Figure src={fig4} srcDark={fig4Dark} alt="Homeostasis time-course">
-**Figure 4 — Homeostasis time-course: the IL-6 peak, delayed IL-10/IL-1Ra counter-response, functional capacity dip, and the set-point reference line, with annotated phase zones.**
+Homeostasis time-course: the IL-6 peak, delayed IL-10/IL-1Ra counter-response, functional capacity dip, and the set-point reference line, with annotated phase zones.
 </Figure>
 
 <Figure src={fig5} srcDark={fig5Dark} alt="Hormesis dose-response">
-**Figure 5 — Hormesis dose-response: the full J-curve (URTI risk), bell-shaped adaptive benefit, and monotonically rising inflammatory load, with the three dose zones (sub-threshold / hormetic / overload) shaded.**
+Hormesis dose-response: the full J-curve (URTI risk), bell-shaped adaptive benefit, and monotonically rising inflammatory load, with the three dose zones (sub-threshold / hormetic / overload) shaded.
 </Figure>
 
 ### The Dual Identity of Inflammatory Mediators
@@ -304,6 +331,8 @@ Homeostasis and hormesis are not competing theories but complementary descriptio
 - In the **acute window (0–24 h post-exercise)**, the homeostatic frame predominates: the organism's priority is to restore internal equilibrium through negative feedback.
 - In the **sub-acute and chronic adaptation window (24 h to multiple training cycles)**, the hormetic frame becomes operative: if the inflammatory signal was of appropriate magnitude and the resolution phase was complete, molecular memory — in the form of elevated Nrf2 target gene expression, increased mitochondrial density, and epigenetic modification of stress-response promoters — shifts the set-point upward (supercompensation).
 
+<Table>
+
 | Dimension | Homeostasis framework | Hormesis framework |
 |---|---|---|
 | Primary signal role of IL-6/ROS | Error signal (perturbation magnitude) | Adaptive stimulus (dose-dependent trigger) |
@@ -315,7 +344,10 @@ Homeostasis and hormesis are not competing theories but complementary descriptio
 | Optimal treatment strategy | Anti-inflammatory resolution support | Preserve signal; avoid premature blunting |
 | Failure mode | Unresolved chronic inflammation | Overtraining / immunosuppression |
 
-*Table 3. Mechanistic contrast between homeostasis and hormesis frameworks applied to exercise-induced inflammation (adapted from [5]).*
+<Fragment slot="caption">
+Mechanistic contrast between homeostasis and hormesis frameworks applied to exercise-induced inflammation (adapted from [5]).
+</Fragment>
+</Table>
 
 ### Pathological Contexts: ME/CFS, Long COVID, and Post-Exertional Malaise
 
@@ -406,7 +438,6 @@ Sleep serves multiple critical functions:
 - [20] Ten Haaf T, Weijs PJM. Resting energy expenditure prediction in recreational athletes of 18–35 years: confirmation of Cunningham equation and an improved weight-based alternative. *PLOS ONE*. 2014;9(9):e108460. doi:10.1371/journal.pone.0108460.
 - [21] Pontzer H, Yamada Y, Sagayama H, et al. Daily energy expenditure through the human life course. *Science*. 2021;373(6556):808–812. doi:10.1126/science.abe5017.
 - [22] Rhoads TW, Anderson RM. Taking the long view on metabolism. *Science*. 2021 Aug 13;373(6556):738–739. doi:10.1126/science.abl4537. PMID: 34385381.
-
 ---
 
 ## One-Minute-Paper Topics
@@ -414,23 +445,23 @@ Sleep serves multiple critical functions:
   A **One-Minute-Paper** (OMP) is a short, focused prompt that students answer in ~60 seconds at the end of a session to consolidate learning, surface misconceptions, and provide formative feedback.  When answering, be concise, specific, and use terminology from today's session.
 </Note>
 
-1. What is the key distinction between "physical activity" and "exercise" according to Caspersen et al., and why does this distinction matter for public health recommendations?
-2. Name the four components of TDEE (BMR, RMR, TEF, AEE/NEAT) and explain which one is most modifiable through lifestyle behaviour.
-3. Describe the cascade of cardiovascular adjustments (heart rate, stroke volume, blood redistribution) that occur within the first minutes of aerobic exercise. What is the homeostatic "goal" of these changes?
-4. How does minute ventilation (V̇E) respond during an incremental exercise test, and what physiological purpose does this serve for maintaining homeostasis?
-5. What is excess post-exercise oxygen consumption (EPOC), and which metabolic processes does it fund during recovery? Why is it clinically relevant?
-6. Explain in your own words what Walter Cannon meant by "the wisdom of the body." How does exercise challenge and ultimately reinforce this wisdom?
-7. Describe the three dose zones of the hormetic dose–response (sub-threshold, hormetic, overload). Give one physiological example for each zone in the context of exercise.
-8. Interleukin-6 plays opposite roles depending on context. Explain the difference between IL-6 as a homeostatic error signal and IL-6 as an anti-inflammatory myokine produced by contracting muscle.
-9. How does exercise-generated ROS activate the Nrf2 pathway, and why would taking high-dose antioxidants immediately post-exercise blunt training adaptations?
-10. What cellular conditions activate PGC-1α during exercise, and what downstream adaptations does it orchestrate? Why is this molecule central to the hormetic framework?
-11. Sketch the J-curve of upper respiratory tract infection risk across exercise intensity zones. At which point is URTI risk lowest, and what happens in the overload zone?
-12. Why are homeostasis and hormesis described as "complementary descriptions of the same biology at different temporal scales"? Use a 72-hour post-exercise timeline to illustrate your answer.
-13. The lecture states that "complete suppression of inflammation may blunt the adaptive signal." What is the evidence for this claim, and what practical implications does it have for athletes?
-14. Using the dual-framework model (homeostasis + hormesis), explain why graded exercise therapy (GET) may be harmful in ME/CFS. What two discrete abnormalities does the model identify in PEM?
-15. Distinguish between NREM Stage 3 (slow-wave sleep) and REM sleep in terms of brain activity, physiological function, and proportion of total sleep time in healthy adults.
-16. What is the glymphatic system, and why is deep (NREM Stage 3) sleep particularly important for cerebral metabolic waste clearance? How might exercise influence this process?
-17. List two mechanisms by which regular physical activity improves sleep quality, and two mechanisms by which sleep deprivation impairs exercise performance. What does "bidirectional" mean here?
-18. The lecture describes exercise-induced temperature regulation as a facilitator of sleep onset. Explain the thermodynamic mechanism: how does a post-exercise drop in core body temperature promote sleep?
-19. Distinguish between "restoration of baseline" (homeostatic outcome) and "set-point elevation / supercompensation" (hormetic outcome). What molecular memory processes make supercompensation possible?
-20. For a healthy recreational runner and a patient with Long COVID, how would you use the homeostasis–hormesis table (Table 3) to justify different exercise prescriptions? Which framework is most relevant for each, and why?
+1. Distinguish "physical activity" from "exercise" using one concrete example for each.
+2. Define energy expenditure in your own words and name two factors that modulate it acutely.
+3. Explain why metabolic strain during exercise is best described as a regulated rather than a passive process.
+4. Describe one cardiovascular response that helps maintain homeostasis during moderate exercise.
+5. Describe one respiratory adjustment that occurs within seconds of starting exercise and explain its purpose.
+6. Why does core temperature rise during exercise even though thermoregulatory mechanisms are activated?
+7. Define homeostasis using the principle of negative feedback and give one exercise-related example.
+8. Define hormesis and explain why it is described as a biphasic dose-response relationship.
+9. Contrast homeostasis and hormesis: which framework better describes long-term training adaptation, and why?
+10. Why can the same inflammatory signal be beneficial in a healthy athlete but harmful in a patient with ME/CFS or Long COVID?
+11. Give one example of an exercise-induced inflammatory response that is adaptive and one that is maladaptive.
+12. Explain how the concept of "allostatic load" might bridge homeostasis and hormesis.
+13. Outline the main stages of sleep architecture and identify which stage is most associated with physical recovery.
+14. What distinguishes NREM from REM sleep at a physiological level?
+15. Describe the bidirectional relationship between exercise and sleep quality with one mechanism in each direction.
+16. Why might evening high-intensity exercise impair sleep onset in some individuals?
+17. How could chronic sleep restriction undermine the hormetic benefits of training?
+18. Identify one measurable physiological marker you could use to monitor recovery from exercise stress.
+19. Which concept from today's lecture was most surprising or counter-intuitive to you, and why?
+20. What single question about homeostasis, hormesis, or sleep would you most like answered in the next lecture?
