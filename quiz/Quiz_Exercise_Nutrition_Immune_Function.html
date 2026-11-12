@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz - Exercise Nutrition Immune Function</title>
+<style>
+  :root{
+    --rot:#A5132B;
+    --rot-d:#7d0e20;
+    --ink:#1a1a1a;
+    --grey-1:#f5f5f4;
+    --grey-2:#e7e5e4;
+    --grey-3:#c8c5c2;
+    --grey-4:#8a8784;
+    --grey-5:#56524f;
+    --ok:#2f6e3b;
+    --ok-bg:#eaf3eb;
+    --no:#A5132B;
+    --no-bg:#fbecee;
+    --paper:#ffffff;
+    --radius:4px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:transparent;
+    line-height:1.55;
+  }
+  .wrap{max-width:none;margin:0;padding:0;}
+  header.top{
+    border-bottom:3px solid var(--rot);
+    padding-bottom:14px;margin-bottom:24px;
+  }
+  header.top .kicker{
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--rot);font-weight:700;margin:0 0 4px;
+  }
+  header.top h1{font-size:24px;margin:0;font-weight:700;letter-spacing:-.01em;}
+  header.top .sub{color:var(--grey-5);font-size:14px;margin-top:4px;}
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--grey-2);
+    border-radius:var(--radius);
+    padding:26px;
+  }
+
+  /* Start screen */
+  .lead{font-size:15px;color:var(--grey-5);margin:0 0 20px;}
+  .opts-grid{display:grid;gap:14px;margin:18px 0 24px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;}
+  select,input[type=number]{
+    width:100%;padding:9px 10px;border:1px solid var(--grey-3);
+    border-radius:var(--radius);font-size:15px;background:#fff;color:var(--ink);
+  }
+  .row{display:flex;gap:14px;flex-wrap:wrap;}
+  .row>.field{flex:1;min-width:160px;}
+  .check{display:flex;align-items:center;gap:9px;font-size:14px;cursor:pointer;}
+  .check input{width:17px;height:17px;accent-color:var(--rot);}
+
+  .btn{
+    display:inline-block;border:none;cursor:pointer;
+    background:var(--rot);color:#fff;font-size:15px;font-weight:600;
+    padding:12px 22px;border-radius:var(--radius);
+    transition:background .15s;
+  }
+  .btn:hover{background:var(--rot-d);}
+  .btn:focus-visible{outline:3px solid var(--rot);outline-offset:2px;}
+  .btn.ghost{background:#fff;color:var(--rot);border:1px solid var(--rot);}
+  .btn.ghost:hover{background:var(--no-bg);}
+  .btn.grey{background:var(--grey-2);color:var(--ink);}
+  .btn.grey:hover{background:var(--grey-3);}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+
+  /* Quiz screen */
+  .meta-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:13px;color:var(--grey-5);margin-bottom:10px;
+  }
+  .tags{display:flex;gap:6px;}
+  .tag{
+    font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;
+    padding:2px 8px;border-radius:99px;background:var(--grey-2);color:var(--grey-5);
+  }
+  .tag.lvl{color:#fff;}
+  .tag.lvl1{background:var(--grey-4);}
+  .tag.lvl2{background:var(--grey-5);}
+  .tag.lvl3{background:var(--rot);}
+  .timer{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink);}
+  .progress{height:5px;background:var(--grey-2);border-radius:99px;overflow:hidden;margin-bottom:18px;}
+  .progress>span{display:block;height:100%;background:var(--rot);width:0;transition:width .25s;}
+  .qtext{font-size:18px;font-weight:600;margin:0 0 18px;line-height:1.4;}
+  .answers{display:grid;gap:10px;}
+  .ans{
+    text-align:left;width:100%;cursor:pointer;
+    background:#fff;border:1px solid var(--grey-3);border-radius:var(--radius);
+    padding:13px 15px;font-size:15px;color:var(--ink);
+    display:flex;gap:12px;align-items:flex-start;transition:border-color .12s,background .12s;
+  }
+  .ans:hover:not(:disabled){border-color:var(--rot);}
+  .ans:focus-visible{outline:3px solid var(--rot);outline-offset:2px;}
+  .ans .letter{
+    flex:0 0 auto;font-weight:700;color:var(--grey-4);
+    width:22px;height:22px;border:1px solid var(--grey-3);border-radius:99px;
+    display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:1px;
+  }
+  .ans.correct{background:var(--ok-bg);border-color:var(--ok);}
+  .ans.correct .letter{background:var(--ok);color:#fff;border-color:var(--ok);}
+  .ans.wrong{background:var(--no-bg);border-color:var(--no);}
+  .ans.wrong .letter{background:var(--no);color:#fff;border-color:var(--no);}
+  .ans:disabled{cursor:default;}
+  .feedback{margin-top:16px;font-size:14px;min-height:24px;}
+  .feedback .fb-ok{color:var(--ok);font-weight:600;}
+  .feedback .fb-no{color:var(--no);font-weight:600;}
+  .navbtns{margin-top:22px;display:flex;justify-content:flex-end;}
+
+  /* Results */
+  .scorebox{
+    display:flex;gap:18px;flex-wrap:wrap;margin:4px 0 24px;
+  }
+  .stat{
+    flex:1;min-width:130px;border:1px solid var(--grey-2);border-radius:var(--radius);
+    padding:16px;text-align:center;background:#fff;
+  }
+  .stat .num{font-size:30px;font-weight:700;line-height:1;}
+  .stat .num.accent{color:var(--rot);}
+  .stat .lbl{font-size:12px;color:var(--grey-5);margin-top:6px;text-transform:uppercase;letter-spacing:.06em;}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+  th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--grey-2);}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--grey-5);font-weight:700;}
+  td.c{text-align:center;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:99px;}
+  .dot.ok{background:var(--ok);}
+  .dot.no{background:var(--no);}
+  .result-actions{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;}
+  .hidden{display:none;}
+  .qcell{max-width:340px;}
+  footer.foot{margin-top:32px;font-size:12px;color:var(--grey-4);text-align:center;}
+  @media (max-width:560px){
+    .card{padding:18px;}
+    .qcell{max-width:none;}
+    table{font-size:12px;}
+    th,td{padding:6px 5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- START -->
+  <section id="start" class="card">
+    <p class="lead">Wähle Umfang und Stufen, dann starte das Quiz. Pro Frage werden Antwortzeit und Ergebnis erfasst. Die Antwortoptionen werden bei jedem Durchlauf neu gemischt.</p>
+    <div class="opts-grid">
+      <div class="row">
+        <div class="field">
+          <label for="levelSel">Schwierigkeit</label>
+          <select id="levelSel">
+            <option value="0">Alle Stufen</option>
+            <option value="1">Nur Stufe 1 – leicht</option>
+            <option value="2">Nur Stufe 2 – mittel</option>
+            <option value="3">Nur Stufe 3 – schwer</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="lecSel">Lecture</label>
+          <select id="lecSel">
+            <option value="all">Alle Lectures</option>
+            <option value="L1">Nur Lecture 1</option>
+            <option value="L2">Nur Lecture 2</option>
+            <option value="L3">Nur Lecture 3</option>
+            <option value="L4">Nur Lecture 4</option>
+            <option value="L5">Nur Lecture 5</option>
+            <option value="L6">Nur Lecture 6</option>
+            <option value="L7">Nur Lecture 7</option>
+            <option value="L8">Nur Lecture 8</option>
+            <option value="L9">Nur Lecture 9</option>
+            <option value="L10">Nur Lecture 10</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="countSel">Anzahl Fragen</label>
+          <input type="number" id="countSel" min="1" value="20">
+        </div>
+      </div>
+      <label class="check"><input type="checkbox" id="shuffleQ" checked> Fragen in zufälliger Reihenfolge</label>
+      <label class="check"><input type="checkbox" id="instantFb" checked> Sofortiges Feedback nach jeder Antwort</label>
+    </div>
+    <button class="btn" id="startBtn">Quiz starten</button>
+    <p class="sub" id="poolInfo" style="margin-top:14px;"></p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="card hidden">
+    <div class="meta-bar">
+      <div class="tags" id="qtags"></div>
+      <div class="timer" id="qtimer">0,0 s</div>
+    </div>
+    <div class="progress"><span id="progBar"></span></div>
+    <p class="qtext" id="qtext"></p>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="navbtns">
+      <button class="btn" id="nextBtn" disabled>Weiter</button>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="card hidden">
+    <p class="kicker" style="color:var(--rot);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin:0 0 4px;">Ergebnis</p>
+    <h2 style="margin:0 0 18px;font-size:22px;" id="scoreHead">Auswertung</h2>
+    <div class="scorebox">
+      <div class="stat"><div class="num accent" id="sCorrect">0</div><div class="lbl">richtig</div></div>
+      <div class="stat"><div class="num" id="sPct">0&nbsp;%</div><div class="lbl">Trefferquote</div></div>
+      <div class="stat"><div class="num" id="sTotal">0&nbsp;s</div><div class="lbl">Gesamtzeit</div></div>
+      <div class="stat"><div class="num" id="sAvg">0&nbsp;s</div><div class="lbl">Ø pro Frage</div></div>
+    </div>
+    <table id="resultTable">
+      <thead>
+        <tr><th>#</th><th>Stufe</th><th>Lec.</th><th class="qcell">Frage</th><th class="c">✓/✗</th><th class="num">Zeit</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="result-actions">
+      <button class="btn" id="retryBtn">Neues Quiz</button>
+      <button class="btn ghost" id="csvBtn">Ergebnis als CSV</button>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ============================================================
+   FRAGEN-DATENBANK
+   - Fragen basieren auf Lectures 1–10 (inkl. Abbildungen) der Kurs-Website.
+   - Antwortlängen sind ausbalanciert: die richtige Antwort ist nicht
+     systematisch die längste oder ausführlichste Option.
+   - correct = richtige Aussage, wrong = Distraktoren.
+   - Positionen werden zur Laufzeit gemischt (s. buildOptions).
+   ============================================================ */
+const BANK = [
+ {
+  "n": 1,
+  "level": 1,
+  "lec": "L1",
+  "q": "Wodurch unterscheidet sich „Exercise“ nach Caspersen et al. von „körperlicher Aktivität“ im Allgemeinen?",
+  "correct": "Exercise ist geplante, strukturierte und wiederholte Aktivität zur Verbesserung der Fitness",
+  "wrong": [
+   "Exercise ist jede Skelettmuskelbewegung, die den Energieumsatz über den Ruhewert anhebt",
+   "Exercise ist wettkampforientierte Aktivität mit festgelegten Regeln und klaren Zielen",
+   "Exercise ist systematisches Üben mit dem Ziel langfristiger Anpassung über Monate",
+   "Exercise ist jede Aktivität oberhalb von 3 MET, unabhängig von Planung und Struktur"
+  ]
+ },
+ {
+  "n": 2,
+  "level": 1,
+  "lec": "L1",
+  "q": "Welches Schwellenkonzept ordnet die Übersichtstabelle der Vorlesung der zweiten Schwelle (T2) zu?",
+  "correct": "Respiratorischer Kompensationspunkt (RCP)",
+  "wrong": [
+   "Erster Knickpunkt im Anstieg von V̇E/V̇O₂",
+   "Gasaustauschschwelle (beginnende CO₂-Mehrbildung)",
+   "Laktatschwelle (erster Laktatanstieg über Basis)",
+   "Aerobe Schwelle aus der Laktatleistungskurve"
+  ]
+ },
+ {
+  "n": 3,
+  "level": 1,
+  "lec": "L1",
+  "q": "Welche Aussage zum REM-Schlaf bei Erwachsenen entspricht der Vorlesung?",
+  "correct": "Er umfasst etwa 20–25 % der Schlafzeit; die Hirnaktivität ähnelt dem Wachzustand",
+  "wrong": [
+   "Er umfasst etwa 50–60 % der Schlafzeit und ist durch Schlafspindeln gekennzeichnet",
+   "Er hat die höchste Weckschwelle und ist durch K-Komplexe und Deltawellen geprägt",
+   "Er bildet den Übergang aus dem Wachzustand, mit sinkendem Muskeltonus und Hirnwellen",
+   "Er steht am Beginn jedes 90-Minuten-Zyklus, noch vor dem NREM-Stadium 1 und 2"
+  ]
+ },
+ {
+  "n": 4,
+  "level": 1,
+  "lec": "L1",
+  "q": "Laut Abbildung zur hormetischen Dosis-Wirkungs-Beziehung (J-Kurve des URTI-Risikos): In welchem Bereich ist das Infektrisiko der oberen Atemwege am niedrigsten?",
+  "correct": "In der hormetischen Zone bei moderater bis intensiver Belastung",
+  "wrong": [
+   "In der unterschwelligen Zone bei sitzender bis leichter Aktivität",
+   "In der Überlastungszone bei extremer, lang anhaltender Belastung",
+   "Am Übergang von der hormetischen Zone zur Überlastungszone",
+   "Nirgends ausgeprägt, da das Risiko monoton mit der Dosis ansteigt"
+  ]
+ },
+ {
+  "n": 5,
+  "level": 2,
+  "lec": "L1",
+  "q": "Eine Person fährt an 4 Tagen pro Woche je 45 min Rad mit einer Intensität von 6 MET. Wie groß ist ihr wöchentliches Aktivitätsvolumen?",
+  "correct": "1080 MET·min pro Woche",
+  "wrong": [
+   "270 MET·min pro Woche",
+   "960 MET·min pro Woche",
+   "1800 MET·min pro Woche",
+   "720 MET·min pro Woche"
+  ]
+ },
+ {
+  "n": 6,
+  "level": 2,
+  "lec": "L1",
+  "q": "Eine Athletin hat eine magere Körpermasse (LBM) von 50 kg. Welchen Ruheumsatz liefert die Cunningham-Gleichung?",
+  "correct": "etwa 1600 kcal pro Tag",
+  "wrong": [
+   "etwa 1450 kcal pro Tag",
+   "etwa 1100 kcal pro Tag",
+   "etwa 1010 kcal pro Tag",
+   "etwa 1850 kcal pro Tag"
+  ]
+ },
+ {
+  "n": 7,
+  "level": 2,
+  "lec": "L1",
+  "q": "Welche Schlussfolgerung zum Gesamtenergieumsatz (TEE) zieht die Vorlesung aus der Lebenslauf-Studie von Pontzer et al.?",
+  "correct": "Nach Adjustierung für FFM verschwinden Geschlechtsunterschiede im TEE Erwachsener",
+  "wrong": [
+   "Der FFM-adjustierte TEE sinkt ab dem 20. Lebensjahr kontinuierlich um etwa 1 % pro Jahr",
+   "Der FFM-adjustierte TEE erreicht seinen Höchstwert in der Pubertät um das 15. Lebensjahr",
+   "Frauen haben auch nach FFM-Adjustierung einen um etwa 10 % niedrigeren TEE als Männer",
+   "Der TEE-Rückgang nach dem 60. Lebensjahr erklärt sich allein durch den Verlust an FFM"
+  ]
+ },
+ {
+  "n": 8,
+  "level": 2,
+  "lec": "L1",
+  "q": "Welche Doppelrolle schreibt die Vorlesung dem IL-6 bei körperlicher Belastung zu?",
+  "correct": "Fehlersignal über das Störungsausmaß und zugleich insulinsensitivierendes Myokin",
+  "wrong": [
+   "Fehlersignal über das Störungsausmaß und zugleich Hemmer der Mitochondrienbiogenese",
+   "Marker der Muskelschädigung und zugleich Auslöser einer belastungsbedingten Insulinresistenz",
+   "Gegenregulatorisches Zytokin wie IL-10 und zugleich direkter Aktivator von Nrf2 im Muskel",
+   "Signal an Hypothalamus und Leber, das erst oberhalb der Überlastungsschwelle entsteht"
+  ]
+ },
+ {
+  "n": 9,
+  "level": 2,
+  "lec": "L1",
+  "q": "Wie soll die Intensität im Krafttraining laut ACSM-ESSA-Statement (Bishop et al.) bevorzugt vorgegeben werden?",
+  "correct": "Über Wiederholungen in Reserve (RIR), da sie Last und Nähe zum Muskelversagen erfassen",
+  "wrong": [
+   "Über Prozent des Einwiederholungsmaximums (%1-RM), da es ohne Labor bestimmbar ist",
+   "Über feste MET-Werte, da diese zwischen Kraft- und Ausdauertraining vergleichbar sind",
+   "Über Prozent der Herzfrequenzreserve (%HRR), da diese die Kreislaufbelastung abbildet",
+   "Über die RPE als alleinige Methode, da sie zentrale und periphere Ermüdung integriert"
+  ]
+ },
+ {
+  "n": 10,
+  "level": 2,
+  "lec": "L1",
+  "q": "Laut Abbildung und Tabelle zum Stufentest (Herzfrequenz, V̇E, V̇O₂): Wie verhalten sich V̇O₂ und V̇E oberhalb von 200 W?",
+  "correct": "V̇O₂ steigt kaum noch an, während V̇E weiter überproportional zunimmt",
+  "wrong": [
+   "V̇O₂ steigt weiter linear an, während V̇E bereits ein Plateau erreicht",
+   "V̇O₂ und V̇E steigen beide weiter streng proportional zur Leistung an",
+   "V̇O₂ fällt leicht ab, während V̇E auf dem Niveau von 200 W stagniert",
+   "V̇O₂ und V̇E erreichen beide bei 200 W gleichzeitig ein klares Plateau"
+  ]
+ },
+ {
+  "n": 11,
+  "level": 3,
+  "lec": "L1",
+  "q": "Laut Abbildung zur autonomen Herzregulation im ABA-Protokoll wurde die RSA-Amplitude in einem atemfrequenzgeführten Band (f_R ± 0,125 Hz) statt im klassischen HF-Band (0,15–0,40 Hz) bestimmt. Warum?",
+  "correct": "Die Atemfrequenz stieg bis 0,98 Hz und lag unter Last oberhalb des HF-Bands",
+  "wrong": [
+   "Die Atemfrequenz fiel unter Last unter 0,15 Hz und lag unterhalb des HF-Bands",
+   "Das HF-Band erfasst sympathische Anteile, die die RSA unter Last überlagern",
+   "Kürzere RR-Intervalle verschieben die RSA unter Last rechnerisch ins LF-Band",
+   "Bewegungsartefakte erscheinen im HF-Band unter Last als falsches Atemsignal"
+  ]
+ },
+ {
+  "n": 12,
+  "level": 3,
+  "lec": "L1",
+  "q": "Laut Abbildung zu V̇O₂ und RER im Stufentest tritt der höchste RER-Wert (1,51) erst in der Erholung auf. Welche Erklärung gibt die Vorlesung?",
+  "correct": "Die Bikarbonatpufferung von Laktat setzt weiter CO₂ frei, während V̇O₂ schon sinkt",
+  "wrong": [
+   "In der Erholung wird bevorzugt Fett oxidiert, was den Quotienten V̇CO₂/V̇O₂ anhebt",
+   "Die Glykogenresynthese verbraucht in der Erholung mehr O₂, als CO₂ abgeatmet wird",
+   "Das O₂-Defizit vom Belastungsbeginn wird erst in der Erholung über V̇CO₂ ausgeglichen",
+   "Die Atemfrequenz fällt in der Erholung abrupt ab, sodass CO₂ im Blut zurückgehalten wird"
+  ]
+ },
+ {
+  "n": 13,
+  "level": 3,
+  "lec": "L1",
+  "q": "Laut Abbildung zur Atemfrequenz (fb) im Stufentest entfällt fast die Hälfte des fb-Anstiegs auf die letzten beiden Stufen. Wie interpretiert die Vorlesung diesen späten Anstieg?",
+  "correct": "Das Atemzugvolumen steigt ab 250 W nicht mehr, daher wird V̇E fast nur über fb erhöht",
+  "wrong": [
+   "V̇O₂ steigt ab 250 W weiter linear, daher muss fb den zusätzlichen O₂-Bedarf decken",
+   "Das Atemzugvolumen fällt ab 250 W ab, daher bleibt V̇E trotz steigender fb konstant",
+   "Die aerobe Schwelle liegt bei 250 W, daher setzt erst dort die Atemantwort überhaupt ein",
+   "fb und Atemzugvolumen steigen ab 250 W gleich stark, daher verdoppelt sich V̇E je Stufe"
+  ]
+ },
+ {
+  "n": 14,
+  "level": 3,
+  "lec": "L1",
+  "q": "Warum kann eine graduierte Aktivierungstherapie (GET) nach dem Dual-Framework-Modell bei ME/CFS schaden?",
+  "correct": "Die hormetische Kurve ist verschoben, sodass übliche Dosen schon in die Überlastzone fallen",
+  "wrong": [
+   "Die hormetische Kurve ist verschoben, sodass übliche Dosen dauerhaft unterschwellig bleiben",
+   "Die IL-10/IL-1Ra-Gegenregulation ist überschießend und unterdrückt das adaptive IL-6-Signal",
+   "Die Homöostase ist intakt, aber GET-Dosen liegen zu niedrig, um Anpassung auszulösen",
+   "Die Entzündung klingt zu rasch ab, sodass keine Superkompensation ausgelöst werden kann"
+  ]
+ },
+ {
+  "n": 15,
+  "level": 3,
+  "lec": "L1",
+  "q": "Was ist laut Vorlesung zu erwarten, wenn ein Athlet unmittelbar nach jeder Einheit hochdosierte Antioxidantien einnimmt?",
+  "correct": "Abgeschwächte Anpassung, weil das ROS-Signal für die Nrf2-Antwort gedämpft wird",
+  "wrong": [
+   "Verstärkte Anpassung, weil ROS-bedingte Schäden an Mitochondrien ausbleiben",
+   "Unveränderte Anpassung, weil Nrf2 nur über das AMP/ATP-Verhältnis aktiviert wird",
+   "Schnellere Superkompensation, weil die homöostatische Erholungsphase verkürzt ist",
+   "Verstärkte Anpassung, weil NF-κB dann überwiegend protektive Zielgene aktiviert"
+  ]
+ },
+ {
+  "n": 16,
+  "level": 1,
+  "lec": "L2",
+  "q": "Welche Kombination von Bestandteilen gehört zur angeborenen (unspezifischen) Immunität?",
+  "correct": "Natürliche Killerzellen, Makrophagen und das Komplementsystem",
+  "wrong": [
+   "T-Lymphozyten, B-Lymphozyten und spezifische Antikörper",
+   "Gedächtniszellen, Plasmazellen und hochaffine Antikörper",
+   "Zytotoxische T-Zellen, T-Helferzellen und Gedächtnis-T-Zellen",
+   "B-Lymphozyten, antigenspezifische Rezeptoren und Immunglobuline"
+  ]
+ },
+ {
+  "n": 17,
+  "level": 1,
+  "lec": "L2",
+  "q": "Welche beiden Größen gelten aus physiologischer Sicht als primäre Determinanten der körperlichen Leistungsfähigkeit?",
+  "correct": "Biologische (anatomische) Struktur und deren physiologische Funktionalität",
+  "wrong": [
+   "Genetische Ausstattung und das individuelle Trainingsverhalten im Alltag",
+   "Maximale Sauerstoffaufnahme und die maximale Muskelkraft der Beine",
+   "Biologisches Alter und der aktuelle Gesundheits- bzw. Krankheitszustand",
+   "Energieaufnahme über die Nahrung und die Leistungsbereitschaft der Person"
+  ]
+ },
+ {
+  "n": 18,
+  "level": 1,
+  "lec": "L2",
+  "q": "Laut Tabelle der Energiebereitstellungssysteme: Welche Energiequellen dominieren bei maximalen Belastungen von bis zu 6–8 Sekunden (z. B. Sprints)?",
+  "correct": "ATP und Kreatinphosphat",
+  "wrong": [
+   "ATP und anaerobe Glykolyse",
+   "Aerobe Glykolyse und Laktat",
+   "Kreatinphosphat und β-Oxidation",
+   "Nur das vorhandene freie ATP"
+  ]
+ },
+ {
+  "n": 19,
+  "level": 2,
+  "lec": "L2",
+  "q": "Wie ist IL-6 einzuordnen, wenn es während körperlicher Belastung aus der kontrahierenden Skelettmuskulatur freigesetzt wird?",
+  "correct": "Als Myokin, das trotz Anstieg antiinflammatorisch wirkt",
+  "wrong": [
+   "Als Akute-Phase-Protein, das vor allem eine Infektion anzeigt",
+   "Als proinflammatorisches Signal für Muskelschädigung",
+   "Als Stresshormon mit immunsuppressiver Wirkung",
+   "Als Zytokin, das die IL-10-Bildung in Ruhe hemmt"
+  ]
+ },
+ {
+  "n": 20,
+  "level": 2,
+  "lec": "L2",
+  "q": "Laut Abbildung zu den Leistungsgrenzen im Altersverlauf reicht die Spanne von körperlicher Inaktivität (1 MET) bis zu sehr schnellem Laufen. Welches Wertepaar markiert das obere Ende dieser Spanne (Hinweis: 1 MET = 3,5 mL·min⁻¹·kg⁻¹)?",
+  "correct": "~26 METs bzw. ~90 mL·min⁻¹·kg⁻¹ V̇O₂max",
+  "wrong": [
+   "~12 METs bzw. ~42 mL·min⁻¹·kg⁻¹ V̇O₂max",
+   "~20 METs bzw. ~45 mL·min⁻¹·kg⁻¹ V̇O₂max",
+   "~26 METs bzw. ~60 mL·min⁻¹·kg⁻¹ V̇O₂max",
+   "~40 METs bzw. ~140 mL·min⁻¹·kg⁻¹ V̇O₂max"
+  ]
+ },
+ {
+  "n": 21,
+  "level": 2,
+  "lec": "L2",
+  "q": "Laut Tabelle der Brennwerte: Wie viel physiologisch nutzbare Energie liefern 20 g Protein und 10 g Fett zusammen?",
+  "correct": "ca. 175 kcal",
+  "wrong": [
+   "ca. 203 kcal",
+   "ca. 227 kcal",
+   "ca. 123 kcal",
+   "ca. 279 kcal"
+  ]
+ },
+ {
+  "n": 22,
+  "level": 2,
+  "lec": "L2",
+  "q": "Wie sind die Energieflussraten (mmol·kg⁻¹·s⁻¹) der Bereitstellungssysteme laut Vorlesung von hoch nach niedrig geordnet?",
+  "correct": "ATP/KrP > anaerobe Glykolyse > aerobe Glykolyse > β-Oxidation",
+  "wrong": [
+   "ATP/KrP > aerobe Glykolyse > anaerobe Glykolyse > β-Oxidation",
+   "Anaerobe Glykolyse > ATP/KrP > β-Oxidation > aerobe Glykolyse",
+   "β-Oxidation > aerobe Glykolyse > anaerobe Glykolyse > ATP/KrP",
+   "ATP/KrP > anaerobe Glykolyse > β-Oxidation > aerobe Glykolyse"
+  ]
+ },
+ {
+  "n": 23,
+  "level": 3,
+  "lec": "L2",
+  "q": "Eine regelmäßig moderat bis intensiv trainierende Person hat direkt nach einer Einheit mehr zirkulierende Lymphozyten und NK-Zellen, in Ruhe aber niedrigere IL-6-, TNF-α- und CRP-Werte als Inaktive. Welche Interpretation passt zur Vorlesung?",
+  "correct": "Akut transiente Zellmobilisation, langfristig gesenkte Grundentzündung",
+  "wrong": [
+   "Chronische Entzündung durch wiederholte akute Entzündungsreize im Training",
+   "Dauerhafte Leukozytose als Zeichen einer verstärkten adaptiven Antwort",
+   "Überlastungsreaktion mit U-förmig steigendem Infektionsrisiko je Einheit",
+   "Cortisolbedingte Immunsuppression, die die Ruhewerte der Marker absenkt"
+  ]
+ },
+ {
+  "n": 24,
+  "level": 3,
+  "lec": "L2",
+  "q": "Laut Tabelle der Referenzwerte liegt die maximale Sprint-Spitzengeschwindigkeit bei ~12 m·s⁻¹, die maximale mittlere Marathongeschwindigkeit bei ~6 m·s⁻¹. Welche bioenergetische Erklärung liefert die Vorlesung für diesen Unterschied?",
+  "correct": "Hohe Tempi erfordern Systeme mit hoher Flussrate, aber kleiner Kapazität",
+  "wrong": [
+   "Beim Marathon limitiert vor allem die maximale Kraft der Beinmuskulatur",
+   "Sprints werden aerob, Marathonläufe überwiegend anaerob-laktazid versorgt",
+   "Die ATP-Ausbeute pro Glukose ist im Sprint höher als bei langer Belastung",
+   "Bei langer Dauer sinkt die Energieflussrate, weil Kreatinphosphat zunimmt"
+  ]
+ },
+ {
+  "n": 25,
+  "level": 3,
+  "lec": "L2",
+  "q": "Warum entsteht bei intensiver Belastung Laktat, und welchen Nutzen hat dies für die Energiebereitstellung?",
+  "correct": "Pyruvat bindet überschüssigen Wasserstoff, sodass die Glykolyse weiterläuft",
+  "wrong": [
+   "Laktat entsteht aus Fettsäuren und liefert mehr ATP als die Glukoseoxidation",
+   "Alanin wird zu Laktat umgebaut, um die Glukosefreisetzung der Leber zu senken",
+   "Kreatinphosphat zerfällt zu Laktat und regeneriert so direkt ATP im Muskel",
+   "Laktat bindet Sauerstoff und verlängert dadurch die aerobe Phosphorylierung"
+  ]
+ },
+ {
+  "n": 26,
+  "level": 1,
+  "lec": "L3",
+  "q": "Unter welchen Bedingungen wird der Grundumsatz (BMR) gemessen?",
+  "correct": "Nüchtern, ohne Vorbelastung, nach 30 min Ruhe im Liegen, thermoneutral",
+  "wrong": [
+   "3–4 h nach leichter Mahlzeit, ohne Vorbelastung, im Sitzen, Raumtemperatur",
+   "Nüchtern, direkt nach leichtem Aufwärmen, im Sitzen bei kühler Umgebung",
+   "Nach normalem Frühstück, 10 min Ruhe im Stehen, thermoneutrale Umgebung",
+   "Nüchtern, nach 30 min ruhigem Gehen, im Liegen bei erhöhter Temperatur"
+  ]
+ },
+ {
+  "n": 27,
+  "level": 1,
+  "lec": "L3",
+  "q": "Wie ist 1 MET per wissenschaftlicher Konvention definiert?",
+  "correct": "3,5 mL O₂·kg⁻¹·min⁻¹ bzw. 1 kcal·kg⁻¹·h⁻¹",
+  "wrong": [
+   "3,5 mL O₂·kg⁻¹·min⁻¹ bzw. 4,8 kcal·kg⁻¹·h⁻¹",
+   "2,8 mL O₂·kg⁻¹·min⁻¹ bzw. 1 kcal·kg⁻¹·h⁻¹",
+   "7,0 mL O₂·kg⁻¹·min⁻¹ bzw. 2 kcal·kg⁻¹·h⁻¹",
+   "1,0 mL O₂·kg⁻¹·min⁻¹ bzw. 3,5 kcal·kg⁻¹·h⁻¹"
+  ]
+ },
+ {
+  "n": 28,
+  "level": 1,
+  "lec": "L3",
+  "q": "Laut Tabelle der vorgeschlagenen standardisierten Klassifikation (ACSM/ESSA): Welche Kriterien entsprechen der Kategorie „High“?",
+  "correct": "> MT2 bis < W_max; 2–3 RIR; RPE₂₀ 15–16",
+  "wrong": [
+   "> MT1 bis < MT2; 4–6 RIR; RPE₂₀ 12–14",
+   "> W_max; < 2 RIR; RPE₂₀ 17 oder höher",
+   "< MT1; 7–8 RIR; RPE₂₀ 10–11 (leicht)",
+   "> MT2 bis < W_max; 4–6 RIR; RPE₂₀ 12–14"
+  ]
+ },
+ {
+  "n": 29,
+  "level": 2,
+  "lec": "L3",
+  "q": "Laut Tabelle der FAO/WHO/UNU-Gleichungen: Wie hoch ist der vorhergesagte BMR einer 25-jährigen Frau mit 60 kg Körpermasse?",
+  "correct": "≈ 5,76 MJ·d⁻¹ (≈ 1376 kcal·d⁻¹)",
+  "wrong": [
+   "≈ 6,68 MJ·d⁻¹ (≈ 1596 kcal·d⁻¹)",
+   "≈ 5,58 MJ·d⁻¹ (≈ 1333 kcal·d⁻¹)",
+   "≈ 6,26 MJ·d⁻¹ (≈ 1496 kcal·d⁻¹)",
+   "≈ 7,62 MJ·d⁻¹ (≈ 1821 kcal·d⁻¹)"
+  ]
+ },
+ {
+  "n": 30,
+  "level": 2,
+  "lec": "L3",
+  "q": "Ein Student geht an 5 Tagen pro Woche je 30 min zügig spazieren (4 METs). Wie viele MET-Minuten pro Woche ergibt das?",
+  "correct": "600 MET·min·Woche⁻¹",
+  "wrong": [
+   "150 MET·min·Woche⁻¹",
+   "120 MET·min·Woche⁻¹",
+   "750 MET·min·Woche⁻¹",
+   "480 MET·min·Woche⁻¹"
+  ]
+ },
+ {
+  "n": 31,
+  "level": 2,
+  "lec": "L3",
+  "q": "Laut Abbildung zu Blutlaktat und Atemäquivalenten: Welche Aussage beschreibt den zweiten Schwellenpunkt (T2) korrekt?",
+  "correct": "Laktat erreicht das maximale Steady State, V̇E/V̇CO₂ knickt nach oben ab",
+  "wrong": [
+   "Laktat steigt erstmals über Ruhe, V̇E/V̇O₂ knickt erstmals nach oben ab",
+   "Laktat fällt unter den Ausgangswert, V̇E/V̇CO₂ sinkt im Übergangsbereich",
+   "Laktat steigt erstmals über Ruhe, V̇E/V̇CO₂ knickt deutlich nach oben ab",
+   "Laktat erreicht das maximale Steady State, V̇E/V̇O₂ fällt deutlich ab"
+  ]
+ },
+ {
+  "n": 32,
+  "level": 2,
+  "lec": "L3",
+  "q": "Eine Athletin fährt 20 min mit konstanter Leistung deutlich oberhalb der anaeroben Schwelle. Welche Kombination von Reaktionen ist laut Vorlesung zu erwarten?",
+  "correct": "Metabolische Azidose, verzögertes V̇O₂-Steady-State, mehr Katecholamine",
+  "wrong": [
+   "Rasches V̇O₂-Steady-State, sinkender PETCO₂, geringere Glykogennutzung",
+   "Sinkende Katecholamine, Hämodilution und ein abnehmendes Doppelprodukt",
+   "Konstantes Blutlaktat, sinkende V̇CO₂ und eine verlängerte Belastungsdauer",
+   "Metabolische Alkalose, sinkende Plasmaelektrolyte, mehr Fettoxidation"
+  ]
+ },
+ {
+  "n": 33,
+  "level": 3,
+  "lec": "L3",
+  "q": "Laut Tabelle der RQ-Werte liegt der RQ für Kohlenhydrate bei 1,00. Bei einer erschöpfenden Belastung wird ein RER von 1,15 gemessen. Wie ist dieser Wert zu interpretieren?",
+  "correct": "Durch Hyperventilation gibt die Lunge mehr CO₂ ab als zellulär entsteht",
+  "wrong": [
+   "Der Muskel oxidiert überwiegend Protein, dessen RQ oberhalb von 1,00 liegt",
+   "Es wird fast nur Fett oxidiert, da Palmitinsäure viel CO₂ je O₂ freisetzt",
+   "Kohlenhydrate erreichen unter Belastung einen RQ von 1,15 statt 1,00 in Ruhe",
+   "Die O₂-Aufnahme übersteigt in dieser Phase die CO₂-Abgabe über die Lunge"
+  ]
+ },
+ {
+  "n": 34,
+  "level": 3,
+  "lec": "L3",
+  "q": "Laut Abbildung zu den MET-Zonen (rechtes Feld) wird eine Person mit einem RMR von 2,8 statt 3,5 mL·kg⁻¹·min⁻¹ betrachtet. Welcher korrigierte Wert und welche Deutung ergeben sich für eine Aktivität mit 4,0 Compendium-METs?",
+  "correct": "5,0 MET – relativ zum eigenen Ruheumsatz ist die Aktivität anstrengender",
+  "wrong": [
+   "3,2 MET – der niedrigere Ruheumsatz senkt auch die relative Belastung",
+   "4,0 MET – der Compendium-Wert gilt unabhängig vom individuellen Ruheumsatz",
+   "4,7 MET – die Differenz von 0,7 mL·kg⁻¹·min⁻¹ wird direkt addiert",
+   "6,0 MET – alle Werte steigen um 50 %, da 2,8 deutlich unter 3,5 liegt"
+  ]
+ },
+ {
+  "n": 35,
+  "level": 3,
+  "lec": "L3",
+  "q": "Zwei Personen sollen jeweils bei 70 % V̇O₂max trainieren. Warum empfiehlt der ACSM/ESSA-Konsens für die Ausdauer-Intensität stattdessen direkt gemessene metabolische Schwellen?",
+  "correct": "Gleiche Prozentwerte erzeugen je nach Schwellenlage ungleichen Stoffwechselstress",
+  "wrong": [
+   "Prozentwerte der V̇O₂max lassen sich im Labor nicht reproduzierbar bestimmen",
+   "Schwellen sind ohne Labortest per RPE genauer bestimmbar als die V̇O₂max selbst",
+   "Prozentanker überschätzen die Belastung vor allem bei untrainierten Personen",
+   "Die V̇O₂max schwankt von Tag zu Tag stärker als Laktat- und Ventilationsschwellen"
+  ]
+ },
+ {
+  "n": 36,
+  "level": 1,
+  "lec": "L4",
+  "q": "Laut Abbildung zum Vergleich der drei Energiesysteme (ATP-Resyntheserate gegen Belastungsdauer): Welche Aussage trifft zu?",
+  "correct": "ATP-PCr liefert die höchste Rate, ist aber nach etwa 5–10 s erschöpft",
+  "wrong": [
+   "Die Glykolyse liefert die höchste Rate und hält sie etwa 5–10 s aufrecht",
+   "Die oxidative Phosphorylierung liefert über 30–90 s die höchste Rate",
+   "ATP-PCr liefert eine moderate Rate, die es über Stunden aufrechterhält",
+   "Glykolyse und ATP-PCr erreichen ihre Spitzenrate erst nach 2–3 min"
+  ]
+ },
+ {
+  "n": 37,
+  "level": 1,
+  "lec": "L4",
+  "q": "Welche beiden Hauptprodukte liefert der Pentosephosphatweg laut Vorlesung?",
+  "correct": "NADPH und Ribose-5-phosphat",
+  "wrong": [
+   "NADH und Acetyl-Coenzym A",
+   "Laktat und oxidiertes NAD⁺",
+   "FADH₂ und Phosphoenolpyruvat",
+   "ATP und Glycerin-3-phosphat"
+  ]
+ },
+ {
+  "n": 38,
+  "level": 1,
+  "lec": "L4",
+  "q": "Wie verändern sich Insulin und Glukagon typischerweise während körperlicher Belastung?",
+  "correct": "Insulin sinkt, Glukagon steigt; die hepatische Glukoseabgabe nimmt zu",
+  "wrong": [
+   "Insulin steigt, Glukagon sinkt; die hepatische Glukoseabgabe nimmt zu",
+   "Insulin und Glukagon steigen; die hepatische Glukoseabgabe nimmt ab",
+   "Insulin und Glukagon sinken; die hepatische Glukoseaufnahme nimmt zu",
+   "Insulin sinkt, Glukagon steigt; die hepatische Glykogensynthese nimmt zu"
+  ]
+ },
+ {
+  "n": 39,
+  "level": 2,
+  "lec": "L4",
+  "q": "Laut Abbildung zur ATP-Ausbeute pro Mol Substrat (2 ATP anaerob, ~31 ATP aerob aus Glukose): Wie viel Glukose muss eine Zelle anaerob umsetzen, um dieselbe ATP-Menge zu gewinnen (Pasteur-Effekt)?",
+  "correct": "Etwa 15-mal so viel Glukose wie unter aeroben Bedingungen",
+  "wrong": [
+   "Etwa 2-mal so viel Glukose wie unter aeroben Bedingungen",
+   "Etwa 5-mal so viel Glukose wie unter aeroben Bedingungen",
+   "Etwa 31-mal so viel Glukose wie unter aeroben Bedingungen",
+   "Etwa 53-mal so viel Glukose wie unter aeroben Bedingungen"
+  ]
+ },
+ {
+  "n": 40,
+  "level": 2,
+  "lec": "L4",
+  "q": "Welche Aussage zur Glukoneogenese trifft laut Vorlesung zu?",
+  "correct": "Drei irreversible Glykolyseschritte werden enzymatisch umgangen",
+  "wrong": [
+   "Sie verläuft als exakte Umkehr aller zehn Reaktionen der Glykolyse",
+   "Sie findet überwiegend im Skelettmuskel statt und nutzt dort Laktat",
+   "Sie liefert netto zwei ATP pro neu gebildetem Molekül Glukose",
+   "Fettsäuren sind neben Laktat und Glycerin ihr wichtigstes Substrat"
+  ]
+ },
+ {
+  "n": 41,
+  "level": 2,
+  "lec": "L4",
+  "q": "Laut Abbildung zum Crossover von Fett zu Kohlenhydraten: Welches Verhältnis KH:Fett gilt bei hoher Intensität, und wo liegt FATmax?",
+  "correct": "Etwa 85:15; FATmax liegt bei ca. 45–65 % V̇O₂max",
+  "wrong": [
+   "Etwa 50:50; FATmax liegt bei ca. 70–85 % V̇O₂max",
+   "Etwa 30:70; FATmax liegt bei ca. 45–65 % V̇O₂max",
+   "Etwa 85:15; FATmax liegt bei ca. 75–90 % V̇O₂max",
+   "Etwa 70:30; FATmax liegt bei ca. 20–35 % V̇O₂max"
+  ]
+ },
+ {
+  "n": 42,
+  "level": 2,
+  "lec": "L4",
+  "q": "Welche Funktion hat die Reduktion von Pyruvat zu Laktat durch die LDH für die intensiv arbeitende Muskelzelle in erster Linie?",
+  "correct": "Sie regeneriert NAD⁺, sodass die Glykolyse weiterlaufen kann",
+  "wrong": [
+   "Sie bindet überschüssige H⁺-Ionen und verhindert so die Azidose",
+   "Sie liefert Acetyl-CoA, damit der Citratzyklus ohne O₂ weiterläuft",
+   "Sie erzeugt NADPH, das für die Resynthese von Phosphokreatin dient",
+   "Sie hemmt die PDH, damit Pyruvat nicht in die Mitochondrien gelangt"
+  ]
+ },
+ {
+  "n": 43,
+  "level": 3,
+  "lec": "L4",
+  "q": "Warum kann körperliche Belastung bei Typ-1-Diabetes die Glukoseaufnahme in den Skelettmuskel verbessern?",
+  "correct": "AMPK und Calcium lösen die GLUT4-Translokation insulinunabhängig aus",
+  "wrong": [
+   "Glukagon steigert unter Belastung die GLUT4-Expression im Muskel",
+   "Belastung macht GLUT2 in der Muskelmembran konstitutiv verfügbar",
+   "Cortisol stellt unter Belastung die Insulinsekretion der β-Zellen her",
+   "Ketonkörper erhöhen unter Belastung die Aktivität von GLUT1 im Muskel"
+  ]
+ },
+ {
+  "n": 44,
+  "level": 3,
+  "lec": "L4",
+  "q": "Bei eingeschränkter mitochondrialer Atmung ist das zirkulierende Laktat erhöht. Welche Erklärung entspricht der Vorlesung?",
+  "correct": "Die PDH-Aktivität sinkt, sodass weniger Pyruvat zu Acetyl-CoA oxidiert wird",
+  "wrong": [
+   "Die MCT1-Expression steigt, sodass mehr Laktat in die Leber importiert wird",
+   "Die Glukoneogenese steigt, sodass mehr Laktat aus Glukose gebildet wird",
+   "Acetyl-CoA wird vermehrt zu Pyruvat und dann zu Laktat zurückgebildet",
+   "Hohes NAD⁺ hemmt die LDH, sodass Laktat nicht mehr abgebaut werden kann"
+  ]
+ },
+ {
+  "n": 45,
+  "level": 3,
+  "lec": "L4",
+  "q": "Verknüpfen Sie die Tabelle zu den Fasertypen mit dem Laktat-Shuttle-Konzept: Welcher Fasertyp ist typischer Laktatproduzent, welcher typischer Verbraucher?",
+  "correct": "Typ IIx produziert (glykolytisch, mitochondrienarm), Typ I oxidiert es",
+  "wrong": [
+   "Typ I produziert (oxidativ, viele Mitochondrien), Typ IIx oxidiert es",
+   "Typ IIa produziert (sehr schnell, wenig Kapillaren), Typ IIx oxidiert es",
+   "Typ I produziert (langsam, wenig Myoglobin), Typ IIa oxidiert es",
+   "Typ IIx produziert (oxidativ, viele Mitochondrien), Typ IIa oxidiert es"
+  ]
+ },
+ {
+  "n": 46,
+  "level": 3,
+  "lec": "L4",
+  "q": "Warum könnte eine dauerhaft hochdosierte Antioxidanziengabe Trainingsanpassungen abschwächen?",
+  "correct": "Moderate ROS wirken als Second Messenger für mitochondriale Biogenese",
+  "wrong": [
+   "Antioxidanzien hemmen die Kreatinkinase und damit die PCr-Resynthese",
+   "ROS sind die Hauptenergiequelle der Typ-I-Fasern bei Dauerbelastung",
+   "Antioxidanzien steigern die Laktatbildung und senken so den Muskel-pH",
+   "Moderate ROS hemmen mTOR und verhindern so eine überschießende Hypertrophie"
+  ]
+ },
+ {
+  "n": 47,
+  "level": 1,
+  "lec": "L5",
+  "q": "Welches Kriterium wird zur Bestimmung des maximalen Laktat-Steady-States (MLSS) im Dauertest am häufigsten verwendet?",
+  "correct": "Anstieg um höchstens 1 mmol/L zwischen Minute 10 und 30",
+  "wrong": [
+   "Anstieg um höchstens 1 mmol/L zwischen Minute 5 und 20",
+   "Anstieg um höchstens 0,5 mmol/L zwischen Minute 10 und 30",
+   "Anstieg um höchstens 2 mmol/L zwischen Minute 10 und 30",
+   "Anstieg um höchstens 1 mmol/L zwischen Minute 20 und 40"
+  ]
+ },
+ {
+  "n": 48,
+  "level": 1,
+  "lec": "L5",
+  "q": "Welche Veränderung tritt laut Vorlesung bei Belastung oberhalb der anaeroben Schwelle auf?",
+  "correct": "Überproportionaler Anstieg von Adrenalin und Noradrenalin im Plasma",
+  "wrong": [
+   "Proportionaler Abfall von Adrenalin und Noradrenalin im Plasma",
+   "Stabiler pH-Wert, da Bicarbonat die zusätzlichen H⁺-Ionen abpuffert",
+   "Unveränderte NK-Zell-Zahlen und gleichbleibender oxidativer Burst",
+   "Abnehmende Ventilation, da der Atemantrieb durch H⁺ gehemmt wird"
+  ]
+ },
+ {
+  "n": 49,
+  "level": 1,
+  "lec": "L5",
+  "q": "Laut Tabelle der ACSM/ESSA-Intensitätskategorien (Bishop et al. 2025): Eine Belastung liegt oberhalb von MT2, aber unterhalb von Wmax. Welche Kategorie liegt vor?",
+  "correct": "Intensitätskategorie „hoch“",
+  "wrong": [
+   "Intensitätskategorie „moderat“",
+   "Intensitätskategorie „sehr hoch“",
+   "Intensitätskategorie „niedrig“",
+   "Intensitätskategorie „sehr niedrig“"
+  ]
+ },
+ {
+  "n": 50,
+  "level": 2,
+  "lec": "L5",
+  "q": "Stegmann-Methode mit neuen Werten: L_end = 9,2 mmol/L; Erholungslaktat 10,2 mmol/L nach 1 min und 8,6 mmol/L nach 3 min. Wann kreuzt die Erholungskurve L_end (lineare Interpolation)?",
+  "correct": "Nach etwa 2,3 min",
+  "wrong": [
+   "Nach etwa 1,6 min",
+   "Nach etwa 2,7 min",
+   "Nach etwa 3,0 min",
+   "Nach etwa 1,3 min"
+  ]
+ },
+ {
+  "n": 51,
+  "level": 2,
+  "lec": "L5",
+  "q": "Laut Abbildung zur IAS-Bestimmung nach Stegmann: Was markiert den Ankerpunkt, von dem aus die Tangente an die Belastungskurve gelegt wird?",
+  "correct": "Den Zeitpunkt, an dem das Erholungslaktat wieder auf L_end gefallen ist",
+  "wrong": [
+   "Den Zeitpunkt, an dem das Erholungslaktat sein Maximum L_max erreicht",
+   "Den Zeitpunkt, an dem das Erholungslaktat wieder den Ruhewert erreicht",
+   "Den Punkt, an dem die Belastungskurve erstmals über den Ausgangswert steigt",
+   "Den Punkt, an dem die Belastungskurve den Wert von 4 mmol/L überschreitet"
+  ]
+ },
+ {
+  "n": 52,
+  "level": 2,
+  "lec": "L5",
+  "q": "Laut Tabelle der aus der IAS abgeleiteten Trainingszonen entspricht GA I 70–90 % der IAS-Geschwindigkeit. Welcher Bereich gilt für eine Läuferin mit v_IAS = 4,0 m/s?",
+  "correct": "Etwa 2,8 bis 3,6 m/s",
+  "wrong": [
+   "Etwa 3,6 bis 4,0 m/s",
+   "Etwa 2,0 bis 2,8 m/s",
+   "Etwa 3,2 bis 3,8 m/s",
+   "Etwa 4,0 bis 4,4 m/s"
+  ]
+ },
+ {
+  "n": 53,
+  "level": 2,
+  "lec": "L5",
+  "q": "Warum ist ein fester Prozentsatz der HFmax laut Vorlesung kein geeigneter Anker für die individuelle Trainingssteuerung?",
+  "correct": "Gleiche %HFmax-Werte liegen bei verschiedenen Personen sehr unterschiedlich zur Schwelle",
+  "wrong": [
+   "Die HFmax lässt sich nur im Ausbelastungstest bestimmen und ist kaum reproduzierbar",
+   "Unter Betablockern steigt die Herzfrequenz nicht mehr mit der Belastungsintensität an",
+   "%HFmax-Vorgaben erzeugen regelmäßig höhere Laktatwerte als %V̇O₂max-Vorgaben",
+   "Die Herzfrequenz bleibt bei konstanter Last an der MLSS stabil und reagiert zu träge"
+  ]
+ },
+ {
+  "n": 54,
+  "level": 3,
+  "lec": "L5",
+  "q": "Laut Tabelle zu Bias und 95-%-Limits of Agreement hat LT4 auf dem Laufband (5-min-Stufen) einen Bias von +0,02 m/s bei LoA ≈ 9 %. Was folgt daraus für einen einzelnen Läufer?",
+  "correct": "Im Mittel passt LT4 gut zur MLSS, im Einzelfall kann sie deutlich abweichen",
+  "wrong": [
+   "Da der Bias fast null ist, entspricht LT4 bei jedem Läufer praktisch genau der MLSS",
+   "Die LoA von 9 % zeigen, dass LT4 die MLSS im Mittel systematisch stark überschätzt",
+   "Ein kleiner Bias belegt eine hohe Korrelation, daher sind die LoA hier ohne Aussage",
+   "Die LoA von 9 % bedeuten, dass nur 9 % der Läufer außerhalb ihrer MLSS trainieren"
+  ]
+ },
+ {
+  "n": 55,
+  "level": 3,
+  "lec": "L5",
+  "q": "Ein ausdauertrainierter Marathonläufer hat seine MLSS bei 2,5 mmol/L Laktat. Was ist zu erwarten, wenn sein Training an der fixen 4-mmol/L-Schwelle (LT4) ausgerichtet wird?",
+  "correct": "LT4 liegt oberhalb seiner MLSS und überschätzt seine Dauerleistungsfähigkeit",
+  "wrong": [
+   "LT4 liegt unterhalb seiner MLSS und unterschätzt seine Dauerleistungsfähigkeit",
+   "LT4 entspricht seiner MLSS, weil 4 mmol/L dem Populationsmittel entspricht",
+   "LT4 liegt oberhalb seiner MLSS und unterschätzt seine Dauerleistungsfähigkeit",
+   "LT4 liegt unterhalb seiner aeroben Schwelle und eignet sich daher für GA I"
+  ]
+ },
+ {
+  "n": 56,
+  "level": 3,
+  "lec": "L5",
+  "q": "Im Retest nach 8 Wochen ist die Laktat-Leistungs-Kurve nach unten verschoben; der Athlet kam jedoch glykogenentleert zum Test. Wie ist der Befund zu bewerten?",
+  "correct": "Die Verschiebung kann ernährungsbedingt sein und muss keine echte Anpassung zeigen",
+  "wrong": [
+   "Die Verschiebung belegt eine Anpassung, da Glykogenmangel die Kurve nach oben schiebt",
+   "Die Verschiebung zeigt eine V̇O₂max-Steigerung, da die IAS auf Training kaum reagiert",
+   "Die Verschiebung ist bedeutungslos, da nur die Laktatkonzentration an der IAS zählt",
+   "Die Verschiebung zeigt eine Überlastung, da Katecholamine die Glykolyse hemmen"
+  ]
+ },
+ {
+  "n": 57,
+  "level": 1,
+  "lec": "L6",
+  "q": "Welche drei Kernfunktionen schreibt die Lactate Shuttle Theory (Brooks 2018) dem Laktat zu?",
+  "correct": "Energiesubstrat, Glukoneogenese-Vorstufe und Signalmolekül",
+  "wrong": [
+   "Energiesubstrat, Pufferbase und Auslöser der Muskelermüdung",
+   "Glykogenspeicherform, Harnstoffvorstufe und Signalmolekül",
+   "Ketonkörpervorstufe, Energiesubstrat und Hypoxiemarker",
+   "Pufferbase, Glukoneogenese-Vorstufe und Hypoxiemarker"
+  ]
+ },
+ {
+  "n": 58,
+  "level": 1,
+  "lec": "L6",
+  "q": "Laut Tabelle der drei Shuttle-Systeme: Welches System beschreibt den Transfer von zytosolisch gebildetem Laktat in die Mitochondrienmatrix derselben Zelle?",
+  "correct": "Intracellular Lactate Shuttle (ILS)",
+  "wrong": [
+   "Cell-Cell Lactate Shuttle (CCLS)",
+   "Organ-Organ Lactate Shuttle (OOLS)",
+   "Postprandial Lactate Shuttle (PLS)",
+   "Extracellular Lactate Shuttle (ELS)"
+  ]
+ },
+ {
+  "n": 59,
+  "level": 1,
+  "lec": "L6",
+  "q": "Laut Tabelle der Ausdauer-Trainingszonen (Zwei-Schwellen-Modell): Welcher Bereich kennzeichnet Grundlagenausdauer I (GA I)?",
+  "correct": "70–90 % IAS bei etwa 1,5–2,5 mmol/l Laktat",
+  "wrong": [
+   "unter 70 % IAS bei weniger als 2 mmol/l Laktat",
+   "90–100 % IAS bei etwa 3–5 mmol/l Laktat",
+   "über 100 % IAS bei variablem Laktatwert",
+   "60–85 % IAS bei etwa 4 mmol/l Laktat"
+  ]
+ },
+ {
+  "n": 60,
+  "level": 2,
+  "lec": "L6",
+  "q": "Laut Abbildung zum Laktat-Umsatzfluss relativ zu Glukose (nach Hui et al. 2017): Welche Aussage beschreibt die Daten korrekt?",
+  "correct": "Beide Werte liegen über 1; gefastet dreht Laktat 2,5-mal so schnell um",
+  "wrong": [
+   "Beide Balken liegen unter 1; im Fasten dominiert Glukose als Brennstoff klar",
+   "Gefüttert liegt der Quotient bei 2,5, im Fasten sinkt er auf etwa 1,1 ab",
+   "Nur im Fasten liegt Laktat über 1; nach Nahrungsaufnahme überwiegt Glukose",
+   "Beide Balken liegen genau bei 1; Laktat und Glukose drehen gleich schnell um"
+  ]
+ },
+ {
+  "n": 61,
+  "level": 2,
+  "lec": "L6",
+  "q": "Laut Abbildung zu Blutlaktat und -glukose nach 75 g oraler Glukose (nach Leija et al. 2024): Was zeigt der zeitliche Verlauf?",
+  "correct": "Laktat steigt an, während Glukose noch auf Nüchternniveau liegt",
+  "wrong": [
+   "Glukose steigt zuerst; Laktat folgt erst nach dem Abfall der Blutglukose",
+   "Laktat und Glukose steigen nur einmal und dabei zeitgleich an",
+   "Laktat fällt nach der Glukosegabe zunächst unter seinen Nüchternwert",
+   "Der größere, systemische Laktatanstieg geht dem Glukosegipfel klar voraus"
+  ]
+ },
+ {
+  "n": 62,
+  "level": 2,
+  "lec": "L6",
+  "q": "Laut Tabelle zu sporternährungsbezogenen Fragen im Licht des Laktat-Shuttles: Welche Rolle spielt die Kohlenhydratform (Glukose, Maltodextrin, Fruktose)?",
+  "correct": "Eine untergeordnete, da alle Kohlenhydrate Laktat als Zwischenstufe durchlaufen",
+  "wrong": [
+   "Eine entscheidende, da nur Glukose ohne Laktat-Zwischenstufe oxidiert wird",
+   "Eine entscheidende, da Fruktose im Darm nicht zu Laktat umgewandelt wird",
+   "Eine untergeordnete, da Ketone Kohlenhydrate im Ausdauersport gleichwertig ersetzen",
+   "Eine untergeordnete, da Maltodextrin direkt als Leberglykogen eingelagert wird"
+  ]
+ },
+ {
+  "n": 63,
+  "level": 2,
+  "lec": "L6",
+  "q": "Warum sind individuelle anaerobe Schwellen (IAS) einer fixen 4-mmol/l-Schwelle vorzuziehen?",
+  "correct": "Gleiche Laktatwerte spiegeln je nach Person andere Stoffwechsellagen wider",
+  "wrong": [
+   "Die 4-mmol/l-Schwelle liegt bei Ausdauertrainierten meist zu niedrig",
+   "Individuelle Schwellen sind unabhängig von der Stufenhöhe des Testprotokolls",
+   "Fixe Schwellen setzen die Messung der Laktatkinetik in der Nachbelastung voraus",
+   "Individuelle Laktatschwellen werden zuverlässiger mit Rampenprotokollen bestimmt"
+  ]
+ },
+ {
+  "n": 64,
+  "level": 3,
+  "lec": "L6",
+  "q": "Welcher Befund von Cai et al. (2023) zeigt, dass Laktat die Elektronentransportkette (ETC) unabhängig von seinem eigenen Stoffwechsel aktiviert?",
+  "correct": "Auch D-Laktat, das LDH nicht umsetzen kann, steigert die ETC-Aktivität",
+  "wrong": [
+   "D-Laktat aktiviert die ETC erst nach Umbau zu L-Laktat durch die LDH",
+   "Nur L-Laktat aktiviert die ETC, nachdem LDH es zu Pyruvat umgesetzt hat",
+   "Laktat steigert die Glykolyse und liefert so mehr NADH an die ETC",
+   "Laktat wirkt über einen Membranrezeptor, ohne in die Matrix zu gelangen"
+  ]
+ },
+ {
+  "n": 65,
+  "level": 3,
+  "lec": "L6",
+  "q": "Eine Long-COVID-Patientin zeigt im Verlauf eine deutliche Linksverschiebung der Laktatleistungskurve, ihre IAS liegt unter 100 W. Welche Konsequenz ergibt sich laut Vorlesung?",
+  "correct": "Standardzonen bergen Risiken; nötig ist eine individuelle Laktatdiagnostik",
+  "wrong": [
+   "Die Kurve zeigt eine bessere Laktatclearance durch MCT1/MCT4-Hochregulation",
+   "Überschwelliges Intervalltraining ist zum Aufbau der Mitochondrien angezeigt",
+   "Fixe 4-mmol/l-Zonen genügen, da die IAS bei diesen Patienten stabil bleibt",
+   "Die Verschiebung spricht für Anpassung mit höherer submaximaler Fettoxidation"
+  ]
+ },
+ {
+  "n": 66,
+  "level": 3,
+  "lec": "L6",
+  "q": "Was spiegelt der exponentielle Laktatanstieg oberhalb der IAS wider, wenn man ihn mit der Lactate Shuttle Theory verknüpft?",
+  "correct": "Die Bildung übersteigt die Oxidationskapazität von Typ-I-Fasern und Herzmuskel",
+  "wrong": [
+   "Der Sauerstoff im Muskel reicht nicht mehr für die oxidative Verwertung aus",
+   "Die Leber stellt die Glukoneogenese aus Laktat oberhalb der IAS abrupt ein",
+   "Die MCT1-Transporter werden bei Überschreiten der IAS akut internalisiert",
+   "Die Laktatbildung der schnell-glykolytischen Fasern sinkt oberhalb der IAS ab"
+  ]
+ },
+ {
+  "n": 67,
+  "level": 1,
+  "lec": "L7",
+  "q": "Wie wird die kardiorespiratorische Fitness (CRF) laut Vorlesung im Belastungstest ausgedrückt?",
+  "correct": "In METs, wobei 1 MET dem Ruheumsatz entspricht",
+  "wrong": [
+   "In mL O₂ · kg⁻¹ · min⁻¹ aus direkter Gasanalyse",
+   "In Watt pro Kilogramm Körpermasse bei Ausbelastung",
+   "In Prozent der maximalen Herzfrequenz (% HFmax)",
+   "In mmol/l Blutlaktat an der anaeroben Schwelle"
+  ]
+ },
+ {
+  "n": 68,
+  "level": 1,
+  "lec": "L7",
+  "q": "Laut Abbildung zur Metaanalyse von Kodama et al. (JAMA 2009): Welcher Zusammenhang besteht zwischen Belastbarkeit in METs und Gesamtmortalität?",
+  "correct": "Pro 1 MET mehr sinkt die Gesamtmortalität um etwa 14–15 %",
+  "wrong": [
+   "Pro 1 MET mehr sinkt die Gesamtmortalität um etwa 1–2 %",
+   "Pro 1 MET mehr sinkt die Gesamtmortalität um etwa 40–50 %",
+   "Erst oberhalb von 7,9 MET sinkt die Gesamtmortalität messbar",
+   "Pro 1 MET mehr sinkt nur die kardiovaskuläre Mortalität"
+  ]
+ },
+ {
+  "n": 69,
+  "level": 1,
+  "lec": "L7",
+  "q": "Das Hazard Ratio von 1,41 (überdurchschnittliche vs. unterdurchschnittliche Fitness) in der Cleveland-Clinic-Kohorte entspricht dem Mortalitätsrisiko welcher Faktoren?",
+  "correct": "Rauchen bzw. Diabetes mellitus",
+  "wrong": [
+   "Adipositas bzw. Bewegungsmangel",
+   "Hypertonie bzw. Hyperlipidämie",
+   "Vorhofflimmern bzw. Herzinsuffizienz",
+   "Alkoholabusus bzw. Schlafmangel"
+  ]
+ },
+ {
+  "n": 70,
+  "level": 2,
+  "lec": "L7",
+  "q": "Warum eignet sich die direkte Labor-VO₂max-Messung laut Vorlesung nicht für ein routinemäßiges Screening?",
+  "correct": "Sie erfordert Metabolic Cart, dichte Atemmaske und geschultes Personal",
+  "wrong": [
+   "Sie ist nur bei Personen unter 40 Jahren valide durchführbar",
+   "Sie liefert Ergebnisse nur in METs und nicht in mL O₂/kg/min",
+   "Sie setzt Blutlaktatmessungen auf jeder einzelnen Belastungsstufe voraus",
+   "Sie ist auf Laufband und Fahrradergometer methodisch nicht anwendbar"
+  ]
+ },
+ {
+  "n": 71,
+  "level": 2,
+  "lec": "L7",
+  "q": "Laut Abbildung zur Gesamtmortalität nach Fitnesskategorie (Cleveland Clinic und Veterans Affairs): Was zeigt sich in der höchsten Fitnesskategorie?",
+  "correct": "Das Risiko sinkt weiter; ein Plateau (Ceiling) ist nicht erkennbar",
+  "wrong": [
+   "Das Risiko steigt wieder an; es ergibt sich eine U-förmige Beziehung",
+   "Die Kurve flacht ab; oberhalb von High ist kein Nutzen mehr messbar",
+   "Der Geschlechtereffekt kehrt sich um; Männer profitieren dort stärker",
+   "Die Konfidenzintervalle sind zu breit, um einen Effekt zu beurteilen"
+  ]
+ },
+ {
+  "n": 72,
+  "level": 2,
+  "lec": "L7",
+  "q": "Laut Tabelle der Empfehlungen nach Messgröße: Für welchen Einsatz ist die Labor-VO₂max vorgesehen?",
+  "correct": "Risikostratifizierung bei Herzinsuffizienz oder pulmonaler Hypertonie",
+  "wrong": [
+   "Fitnessmonitoring gesunder Erwachsener in der hausärztlichen Routinepraxis",
+   "Epidemiologische Studien zur Gesamtmortalität in großen Kohorten",
+   "Steuerung des Krafttrainings bei älteren Menschen mit Sturzrisiko",
+   "Verlaufskontrolle von Smartwatch-Werten bei besorgten Patienten"
+  ]
+ },
+ {
+  "n": 73,
+  "level": 2,
+  "lec": "L7",
+  "q": "Was empfiehlt die Vorlesung (Tabelle der Empfehlungen, Kim et al. 2023) zu Kraft- und Gleichgewichtstraining?",
+  "correct": "Ergänzend zur CRF; zusammen senkt es die Mortalität mehr als Ausdauer allein",
+  "wrong": [
+   "Als Ersatz für CRF-Tests, da Kraftwerte die Mortalität besser vorhersagen",
+   "Nur für Leistungssportler; bei Gesunden ist kein Zusatznutzen belegt",
+   "Nachrangig, da kombiniertes Training dem reinen Ausdauertraining unterlegen ist",
+   "Ergänzend zur CRF; die Mortalität bleibt gegenüber Ausdauer allein gleich"
+  ]
+ },
+ {
+  "n": 74,
+  "level": 3,
+  "lec": "L7",
+  "q": "Die Smartwatch eines Patienten zeigt einen Rückgang der VO₂max von 42 auf 39 mL/kg/min (ca. 7 %). Wie ist das laut Vorlesung einzuordnen?",
+  "correct": "Die Änderung liegt innerhalb des typischen Schätzfehlers von 7–16 % MAPE",
+  "wrong": [
+   "Die Änderung belegt einen klinisch relevanten Verlust von rund einem MET",
+   "Die Änderung erfordert eine sofortige Herzinsuffizienz-Abklärung im Labor",
+   "Die Änderung ist präzise, da die Uhr den Gasaustausch indirekt mitmisst",
+   "Die Änderung entspricht einem um 14 % erhöhten kardiovaskulären Risiko"
+  ]
+ },
+ {
+  "n": 75,
+  "level": 3,
+  "lec": "L7",
+  "q": "Die Fitness-Überlebens-Beziehung ist abgestuft und ohne Ceiling. Was folgt daraus für Patienten mit Long COVID und einer Belastbarkeit unter 5 METs?",
+  "correct": "Gerade am unteren Fitnessende bringen sichere CRF-Zuwächse den größten Gewinn",
+  "wrong": [
+   "Erst ab Elite-Fitness ist eine nennenswerte Senkung der Mortalität zu erwarten",
+   "Unterhalb von 5 METs ist kein Zusammenhang mit der Mortalität nachweisbar",
+   "Der Nutzen ist über alle Stufen gleich groß; die Ausgangsfitness ist irrelevant",
+   "Am unteren Fitnessende ist maximal intensives Intervalltraining vorrangig"
+  ]
+ },
+ {
+  "n": 76,
+  "level": 3,
+  "lec": "L7",
+  "q": "Laut Abbildung zur Metaanalyse 2024 (Swain & Franklin) zeigen METs und direkte VO₂max ähnliche Effektschätzer (≈14 %). Welche Schlussfolgerung ist korrekt?",
+  "correct": "Beide messen dieselbe aerobe Kapazität; Wearables ersetzen METs dadurch nicht",
+  "wrong": [
+   "Da beide gleich wirken, können Wearable-VO₂max-Werte METs im Alltag gleichwertig ersetzen",
+   "Die Evidenz ist ausgewogen, da beide Maße jeweils etwa die Hälfte der Teilnehmenden stellen",
+   "Direkte VO₂max ist überlegen, da sie 234-fach mehr Teilnehmende als METs einschließt",
+   "Die Ähnlichkeit zeigt, dass METs nur die Bewegungsmenge, nicht die aerobe Kapazität messen"
+  ]
+ },
+ {
+  "n": 77,
+  "level": 1,
+  "lec": "L8",
+  "q": "Welche Beschreibung entspricht der Definition von Exercise Snacks in der Vorlesung?",
+  "correct": "Isolierte, kurze (≤1 min), intensive Belastungen, mehrmals am Tag",
+  "wrong": [
+   "Eine tägliche Einheit von mindestens 10 min bei moderater Intensität",
+   "Niedrigintensive Gehpausen von je 5 min nach jeder Stunde im Sitzen",
+   "Kurze Dehn- und Mobilisationsübungen von 2–3 min zwischen den Mahlzeiten",
+   "Ein 20-minütiges HIIT-Programm an drei nicht aufeinanderfolgenden Tagen"
+  ]
+ },
+ {
+  "n": 78,
+  "level": 1,
+  "lec": "L8",
+  "q": "Laut Abbildung zur postprandialen Blutglukose (sechs einminütige Snacks vor der Mahlzeit vs. Kontrolle, insulinresistente Erwachsene): Welche beiden Effekte werden dargestellt?",
+  "correct": "~1,4 mmol/L niedrigerer 3-h-Peak, ~0,7 mmol/L niedrigerer 24-h-Mittelwert",
+  "wrong": [
+   "~0,7 mmol/L niedrigerer 3-h-Peak, ~1,4 mmol/L niedrigerer 24-h-Mittelwert",
+   "~1,4 mmol/L niedrigerer 3-h-Peak, kein Effekt auf den 24-h-Mittelwert",
+   "~2,8 mmol/L niedrigerer 3-h-Peak, ~1,4 mmol/L niedrigerer 24-h-Mittelwert",
+   "Kein Effekt auf den 3-h-Peak, ~0,7 mmol/L niedrigerer 24-h-Mittelwert"
+  ]
+ },
+ {
+  "n": 79,
+  "level": 1,
+  "lec": "L8",
+  "q": "In welcher zeitlichen Reihenfolge (akut → subakut → chronisch) laufen die drei Phasen der muskulären Adaptation an Exercise Snacks ab?",
+  "correct": "AMPK/PGC-1α → mTORC1-Proteinsynthese → Satellitenzellaktivierung",
+  "wrong": [
+   "mTORC1-Proteinsynthese → AMPK/PGC-1α → Satellitenzellaktivierung",
+   "Satellitenzellaktivierung → AMPK/PGC-1α → mTORC1-Proteinsynthese",
+   "AMPK/PGC-1α → Satellitenzellaktivierung → mTORC1-Proteinsynthese",
+   "mTORC1-Proteinsynthese → Satellitenzellaktivierung → AMPK/PGC-1α"
+  ]
+ },
+ {
+  "n": 80,
+  "level": 2,
+  "lec": "L8",
+  "q": "Warum ist die kontraktionsinduzierte GLUT4-Translokation gerade für Menschen mit Insulinresistenz klinisch relevant?",
+  "correct": "Kontraktion bringt GLUT4 über AMPK an die Membran, auch bei gestörtem Insulinsignal",
+  "wrong": [
+   "Kontraktion steigert die Insulinsekretion des Pankreas und überwindet so die Resistenz",
+   "Kontraktion erhöht die GLUT4-Expression in der Leber und senkt die Glukoseabgabe",
+   "Kontraktion sensibilisiert den Insulinrezeptor über Ca²⁺ und verdoppelt GLUT2",
+   "Belastung hemmt die Glukoseaufnahme im Fettgewebe, sodass mehr für den Muskel bleibt"
+  ]
+ },
+ {
+  "n": 81,
+  "level": 2,
+  "lec": "L8",
+  "q": "Laut Abbildung zur VILPA-Mortalitätsreduktion (UK Biobank): Bei welchem Dosis-Muster und Outcome ist die Risikoreduktion am größten?",
+  "correct": "3 × 1–2 min pro Tag; kardiovaskuläre Mortalität (~48–49 %)",
+  "wrong": [
+   "Einmal 4,4 min pro Tag; kardiovaskuläre Mortalität (~48–49 %)",
+   "3 × 1–2 min pro Tag; Krebsmortalität (~48–49 %)",
+   "Einmal 4,4 min pro Tag; Gesamtmortalität (~38–40 %)",
+   "3 × 1–2 min pro Tag; Gesamtmortalität (~58–60 %)"
+  ]
+ },
+ {
+  "n": 82,
+  "level": 2,
+  "lec": "L8",
+  "q": "Ein Patient mit Typ-2-Diabetes unter Insulintherapie will mit Exercise Snacks abnehmen und das Insulin absetzen. Welche Einschätzung entspricht der Vorlesung?",
+  "correct": "Snacks wirken additiv zur Medikation; für Gewichtsabnahme braucht es zusätzlich Ernährung",
+  "wrong": [
+   "Snacks ersetzen die Medikation; die Gewichtsabnahme gelingt allein durch die Snacks",
+   "Snacks wirken additiv zur Medikation; die Gewichtsabnahme gelingt allein durch die Snacks",
+   "Snacks ersetzen die Medikation; für Gewichtsabnahme braucht es zusätzlich Ernährung",
+   "Snacks sind unter Insulintherapie kontraindiziert; Ernährungsumstellung allein reicht"
+  ]
+ },
+ {
+  "n": 83,
+  "level": 2,
+  "lec": "L8",
+  "q": "Laut Tabelle des Beispielprotokolls sollen die Snacks bei ≥75–85 % HRmax liegen (HRmax = 211 − 0,65 × Alter). Welcher Zielbereich ergibt sich für den 53-jährigen Patienten aus §1.1?",
+  "correct": "ca. 132–150 Schläge/min",
+  "wrong": [
+   "ca. 125–142 Schläge/min",
+   "ca. 150–168 Schläge/min",
+   "ca. 106–124 Schläge/min",
+   "ca. 141–159 Schläge/min"
+  ]
+ },
+ {
+  "n": 84,
+  "level": 3,
+  "lec": "L8",
+  "q": "Warum wirkt das nach einem Exercise Snack aus dem Muskel freigesetzte IL-6 antiinflammatorisch, chronisch erhöhtes IL-6 bei Adipositas dagegen nicht?",
+  "correct": "Transiente Peaks induzieren IL-10, IL-1ra und sTNF-R; Dauererhöhung wirkt proinflammatorisch",
+  "wrong": [
+   "Muskel-IL-6 bindet einen eigenen Rezeptor als Fett-IL-6 und erreicht daher NF-κB nicht",
+   "Muskel-IL-6 wird rasch renal eliminiert und entfaltet deshalb keine systemische Wirkung",
+   "Transiente Peaks steigern TNF-α kurzfristig, was später eine Toleranz gegen IL-1β erzeugt",
+   "Muskel-IL-6 hemmt die Lipolyse und senkt so die Freisetzung entzündlicher Fettsäuren"
+  ]
+ },
+ {
+  "n": 85,
+  "level": 3,
+  "lec": "L8",
+  "q": "Bei einem Long-COVID-Patienten mit autonomer Dysfunktion ist die kardiale Anpassung begrenzt. Über welche Komponente der Fick-Gleichung wirken Exercise Snacks hier vorrangig?",
+  "correct": "Peripher: größere a-vO₂-Differenz durch Mitochondrien und Kapillaren",
+  "wrong": [
+   "Zentral: höheres Herzzeitvolumen durch ein gesteigertes Ruheschlagvolumen",
+   "Zentral: höherer arterieller O₂-Gehalt durch gesteigerte Hämoglobinbildung",
+   "Peripher: kleinere a-vO₂-Differenz durch geringere O₂-Extraktion im Muskel",
+   "Zentral: höhere HRV durch Barorezeptortraining und damit mehr Herzzeitvolumen"
+  ]
+ },
+ {
+  "n": 86,
+  "level": 3,
+  "lec": "L8",
+  "q": "Laut Abbildung zu den Zeitskalen der vier Adaptationsdomänen: Warum ist ein einzelner Exercise Snack in der Blutglukose messbar, in der V̇O₂max aber nicht?",
+  "correct": "Der Energiestoffwechsel reagiert in Minuten–Stunden, die aerobe Kapazität erst nach Wochen",
+  "wrong": [
+   "Die V̇O₂max sinkt nach einem Snack akut ab und maskiert so den eigentlichen Trainingseffekt",
+   "Glukose reagiert über mTORC1 binnen Sekunden, die V̇O₂max erst über Satellitenzellen",
+   "Immunsignale überlagern in den ersten Tagen jede messbare Veränderung der V̇O₂max",
+   "Die aerobe Kapazität reagiert in Stunden, ist mit Spiroergometrie aber nicht erfassbar"
+  ]
+ },
+ {
+  "n": 87,
+  "level": 1,
+  "lec": "L9",
+  "q": "Wie hoch ist die empfohlene tägliche Proteinzufuhr (RDA) für die Allgemeinbevölkerung laut Vorlesung?",
+  "correct": "0,8 g/kg/Tag, entsprechend etwa 11 % der Energiezufuhr",
+  "wrong": [
+   "1,0 g/kg/Tag, entsprechend etwa 15 % der Energiezufuhr",
+   "0,6 g/kg/Tag, entsprechend etwa 8 % der Energiezufuhr",
+   "1,2 g/kg/Tag, entsprechend etwa 18 % der Energiezufuhr",
+   "0,8 g/kg/Tag, entsprechend etwa 22 % der Energiezufuhr"
+  ]
+ },
+ {
+  "n": 88,
+  "level": 1,
+  "lec": "L9",
+  "q": "Welche Zuordnung sportartspezifischer Proteinempfehlungen ist laut Vorlesung korrekt?",
+  "correct": "Ausdauer ~1,2–1,5 g/kg/Tag; Kraft/Power ~1,6–1,8 g/kg/Tag",
+  "wrong": [
+   "Ausdauer ~1,6–1,8 g/kg/Tag; Kraft/Power ~1,2–1,5 g/kg/Tag",
+   "Ausdauer ~0,8–1,0 g/kg/Tag; Kraft/Power ~2,2–2,5 g/kg/Tag",
+   "Ausdauer ~1,2–1,5 g/kg/Tag; Kraft/Power ~2,4–3,0 g/kg/Tag",
+   "Ausdauer ~1,0–1,2 g/kg/Tag; Kraft/Power ~1,6–1,8 g/kg/Tag"
+  ]
+ },
+ {
+  "n": 89,
+  "level": 1,
+  "lec": "L9",
+  "q": "Welcher Umfragebefund wird in der Vorlesung als Beleg für die „Protein-Obsession“ angeführt?",
+  "correct": "2024 wollten 71 % der US-Amerikaner mehr Protein, 2022 nur 52 %",
+  "wrong": [
+   "2024 wollten 52 % der US-Amerikaner mehr Protein, 2022 waren es 71 %",
+   "71 % der Freizeitsportler beziehen ihr Proteinwissen aus Social Media",
+   "2024 wollten 40 % der US-Amerikaner mehr Protein, 2022 waren es 22 %",
+   "2024 aßen 71 % der US-Amerikaner mehr als die doppelte Protein-RDA"
+  ]
+ },
+ {
+  "n": 90,
+  "level": 2,
+  "lec": "L9",
+  "q": "Eine 70 kg schwere Athletin fragt nach der Mahlzeit direkt nach dem Training. Welche Portion entspricht der Post-Exercise-Empfehlung der Vorlesung?",
+  "correct": "ca. 28 g Protein plus ca. 56 g Kohlenhydrate",
+  "wrong": [
+   "ca. 56 g Protein plus ca. 28 g Kohlenhydrate",
+   "ca. 28 g Protein plus ca. 28 g Kohlenhydrate",
+   "ca. 14 g Protein plus ca. 28 g Kohlenhydrate",
+   "ca. 42 g Protein plus ca. 84 g Kohlenhydrate"
+  ]
+ },
+ {
+  "n": 91,
+  "level": 2,
+  "lec": "L9",
+  "q": "Laut Abbildung „Training vs Protein Effects“: Welche Aussage über den Zuwachs an Magermasse und Maximalkraft wird gestützt?",
+  "correct": "Der Trainingsreiz ist Haupttreiber; zusätzliches Protein bringt einen kleinen Zusatzeffekt",
+  "wrong": [
+   "Zusätzliches Protein steigert die Magermasse auch ohne Training etwa so stark wie Training",
+   "Training und zusätzliches Protein tragen etwa gleich viel zu Kraft und Magermasse bei",
+   "Zusätzliches Protein ist Haupttreiber; Training verstärkt den Proteineffekt nur gering",
+   "Ohne zusätzliches Protein bleibt Krafttraining ohne messbaren Effekt auf die Magermasse"
+  ]
+ },
+ {
+  "n": 92,
+  "level": 2,
+  "lec": "L9",
+  "q": "Ein Kraftsportler plant ~2,4 g/kg/Tag, also etwa die dreifache RDA. Wie ist das laut Abbildung zu den Zufuhrbereichen und §2.2 zu bewerten?",
+  "correct": "Keine hochwertigen Daten stützen das; die Evidenz spricht gegen deutlich >1,6 g/kg/Tag",
+  "wrong": [
+   "Sinnvoll, da Kraftsportler laut Konsens 2,2–2,8 g/kg/Tag für Adaptationen benötigen",
+   "Unbedenklich, da mTORC1-Aktivierung in Makrophagen erst ab ~3,0 g/kg/Tag beschrieben ist",
+   "Sinnvoll, da RCTs und Metaanalysen einen Zusatznutzen der dreifachen RDA belegen",
+   "Unbedenklich, solange das Protein auf mindestens 3–4 Mahlzeiten pro Tag verteilt wird"
+  ]
+ },
+ {
+  "n": 93,
+  "level": 3,
+  "lec": "L9",
+  "q": "Über welchen Mechanismus kann eine Proteinzufuhr oberhalb von ~1,5 g/kg/Tag laut Vorlesung die Atherosklerose fördern?",
+  "correct": "Leucin aktiviert mTORC1 in Makrophagen und hemmt so die Mitophagie",
+  "wrong": [
+   "Leucin hemmt mTORC1 in Makrophagen und steigert dadurch die Mitophagie",
+   "Leucin aktiviert mTORC1 im Endothel und steigert dadurch die LDL-Aufnahme",
+   "Harnstoff aus dem Proteinabbau schädigt das Endothel und fördert Plaques",
+   "Leucin aktiviert AMPK in Makrophagen und blockiert dadurch die Autophagie"
+  ]
+ },
+ {
+  "n": 94,
+  "level": 3,
+  "lec": "L9",
+  "q": "Laut Abbildung mit den beiden Dosis-Wirkungs-Kurven (Protein pro Mahlzeit): Welche Schlussfolgerung ist durch die Darstellung gerechtfertigt?",
+  "correct": "Ab ~25–30 g pro Mahlzeit stagniert die MPS, während mTORC1 in Makrophagen weiter steigt",
+  "wrong": [
+   "Ab ~25–30 g pro Mahlzeit steigt die MPS weiter, während mTORC1 in Makrophagen abflacht",
+   "Ab ~10–15 g pro Mahlzeit stagniert die MPS, während mTORC1 in Makrophagen konstant bleibt",
+   "Ab ~40–50 g pro Mahlzeit stagniert die MPS, während mTORC1 in Makrophagen erst einsetzt",
+   "Beide Kurven steigen bis ~60 g pro Mahlzeit parallel an und erreichen dann ein Plateau"
+  ]
+ },
+ {
+  "n": 95,
+  "level": 1,
+  "lec": "L10",
+  "q": "Wie definiert die WHO die Post-COVID-19-Condition (PCC)?",
+  "correct": "Symptome ab 3 Monaten nach Infektion, mindestens 2 Monate anhaltend, ohne andere Erklärung",
+  "wrong": [
+   "Symptome ab 4 Wochen nach Infektion, mindestens 6 Monate anhaltend, ohne andere Erklärung",
+   "Symptome ab 6 Monaten nach Infektion, mindestens 3 Monate anhaltend, ohne andere Erklärung",
+   "Symptome ab 2 Monaten nach Infektion, mindestens 3 Monate anhaltend, ohne andere Erklärung",
+   "Symptome ab 3 Monaten nach Infektion, mindestens 2 Wochen anhaltend, mit positivem PCR-Test"
+  ]
+ },
+ {
+  "n": 96,
+  "level": 1,
+  "lec": "L10",
+  "q": "Welche Morgenkonstellation sagte bei Aitken et al. innerhalb einer Person stärkere Symptome am selben Abend voraus?",
+  "correct": "Höhere HR und niedrigere HRV als im persönlichen Mittel",
+  "wrong": [
+   "Niedrigere HR und höhere HRV als im persönlichen Mittel",
+   "Höhere HR und höhere HRV als im persönlichen Mittel",
+   "Niedrigere HR und niedrigere HRV als im persönlichen Mittel",
+   "Höhere Atemfrequenz bei unveränderter HR und HRV"
+  ]
+ },
+ {
+  "n": 97,
+  "level": 1,
+  "lec": "L10",
+  "q": "Welche Einschränkung von PPG-basierten Wearable-Messungen nennt die Vorlesung?",
+  "correct": "Abhängigkeit von Sensorqualität, Gerätetyp, Hautton und Messbedingungen",
+  "wrong": [
+   "Keine Erfassung der Herzfrequenz während der Nacht und im Schlaf möglich",
+   "Daten vor Krankheitsbeginn lassen sich nicht retrospektiv auswerten",
+   "Zu geringe zeitliche Auflösung für Analysen von Tag-zu-Tag-Schwankungen",
+   "Für die Kalibrierung der HRV-Werte ist eine Blutentnahme erforderlich"
+  ]
+ },
+ {
+  "n": 98,
+  "level": 2,
+  "lec": "L10",
+  "q": "Laut Abbildung zur z-transformierten Ruheherzfrequenz (Ledebur et al. 2025): Was unterscheidet die Kohorte mit persistierenden Symptomen (PS) von den Kontrollen?",
+  "correct": "Schon vor dem Test erhöhte RHR und eine stärkere, länger anhaltende Auslenkung danach",
+  "wrong": [
+   "Vor dem Test identische RHR, danach eine schwächere und kürzere Auslenkung als bei NS",
+   "Schon vor dem Test erniedrigte RHR, danach eine rasche Normalisierung binnen 7 Tagen",
+   "Vor dem Test identische RHR, danach stärkere Auslenkung nur in der negativen Kontrolle",
+   "Schon vor dem Test erhöhte RHR, nach der Infektion aber geringere Auslenkung als bei NS"
+  ]
+ },
+ {
+  "n": 99,
+  "level": 2,
+  "lec": "L10",
+  "q": "Was beschreibt ein within-person-Effekt im Mehrebenenmodell von Aitken et al. (2026)?",
+  "correct": "Wie Abweichungen vom persönlichen Ausgangswert mit Symptomänderungen derselben Person zusammenhängen",
+  "wrong": [
+   "Wie sich Personen mit dauerhaft unterschiedlichem Biometrie-Niveau in ihrer mittleren Symptomlast unterscheiden",
+   "Wie stark die Messwerte einer Person zwischen Smartphone-Kamera und Polar-Armband voneinander abweichen",
+   "Wie gut das Modell bei neuen, nicht im Trainingsdatensatz enthaltenen Personen die Symptome vorhersagt",
+   "Wie stark die Symptome einer Person von den berichteten Symptomen anderer Studienteilnehmender abhängen"
+  ]
+ },
+ {
+  "n": 100,
+  "level": 2,
+  "lec": "L10",
+  "q": "Modelle aus Morgenbiometrie plus Vortagssymptomen erreichten AUC 0,74–0,85, Vortagssymptome allein 0,73–0,83 (p < 0,0001). Wie ist das zu interpretieren?",
+  "correct": "Die Biometrie verbessert die Vorhersage über Vortagssymptome hinaus, nur moderat",
+  "wrong": [
+   "Die Biometrie allein sagt Crashs deutlich besser vorher als die Vortagssymptome",
+   "Die Biometrie liefert keine Zusatzinformation, da der Unterschied zufällig ist",
+   "Die Vortagssymptome allein erreichen eine höhere AUC als das kombinierte Modell",
+   "Die Biometrie verbessert nur die Vorhersage von Brain Fog, nicht von Crash und Fatigue"
+  ]
+ },
+ {
+  "n": 101,
+  "level": 3,
+  "lec": "L10",
+  "q": "Laut Tabelle der Prädiktoren für persistierende Post-COVID-Symptome (logistische Regression): Welche Interpretation ist korrekt?",
+  "correct": "Stärkster Prädiktor ist die Symptomzahl der Akutphase; die Prä-RHR trägt bei",
+  "wrong": [
+   "Die Prä-RHR ist der stärkste Prädiktor; die Symptomzahl der Akutphase spielt keine Rolle",
+   "Chronische Bronchitis ist der stärkste Prädiktor, gefolgt von psychischen Erkrankungen",
+   "Alle Merkmale haben eine Odds Ratio unter 1 und wirken damit protektiv gegenüber PCC",
+   "Allergien und psychische Erkrankungen sind stärker prädiktiv als die Symptomzahl"
+  ]
+ },
+ {
+  "n": 102,
+  "level": 3,
+  "lec": "L10",
+  "q": "Welche Erklärung verknüpft laut Vorlesung eine morgendliche HRV-Abnahme mechanistisch mit einem Crash später am Tag?",
+  "correct": "Chronische Entzündung stört die autonome Balance; vagale, antiinflammatorische Kontrolle sinkt",
+  "wrong": [
+   "Parasympathische Aktivierung senkt die HRV und fördert dadurch Fatigue und Brain Fog",
+   "Hohe Vagusaktivität verstärkt über den cholinergen Weg die Zytokinfreisetzung am Abend",
+   "Eine Sympathikusdämpfung senkt die HR und verlagert Energie in Entzündungsprozesse",
+   "PPG-Messfehler am Morgen erzeugen systematisch scheinbare HRV-Abfälle vor Symptomtagen"
+  ]
+ }
+];
+
+/* ============================================================
+   STATE & HELFER
+   ============================================================ */
+const LETTERS = ["A","B","C","D","E"];
+const $ = id => document.getElementById(id);
+
+let session = null;        // aktuelle Quiz-Session
+let qStartTime = 0;        // Startzeitpunkt der aktuellen Frage (ms)
+let tickHandle = null;     // Intervall für Live-Timer
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function fmt(sec){ return sec.toFixed(1).replace(".",",") + " s"; }
+
+function buildOptions(item){
+  // Optionen mischen, Index der richtigen Antwort merken
+  const opts = shuffle([{t:item.correct,ok:true}, ...item.wrong.map(w=>({t:w,ok:false}))]);
+  return opts;
+}
+
+const pool0 = () => { const lvl = parseInt($("levelSel").value,10); const lec = $("lecSel").value;
+  return BANK.filter(q => (lvl===0 || q.level===lvl) && (lec==="all" || q.lec===lec)); };
+// Pool-Info beim Laden / bei Filteränderung
+function updatePoolInfo(){
+  const pool = pool0();
+  const max = pool.length;
+  const inp = $("countSel");
+  inp.max = max;
+  if(parseInt(inp.value,10) > max) inp.value = max;
+  $("poolInfo").textContent = `Verfügbar in der Auswahl: ${max} Fragen.`;
+}
+$("levelSel").addEventListener("change", updatePoolInfo);
+$("lecSel").addEventListener("change", updatePoolInfo);
+updatePoolInfo();
+
+/* ============================================================
+   QUIZ-ABLAUF
+   ============================================================ */
+function startQuiz(){
+  let pool = pool0().slice();
+  if($("shuffleQ").checked) pool = shuffle(pool);
+  let count = parseInt($("countSel").value,10);
+  if(isNaN(count) || count<1) count = 1;
+  count = Math.min(count, pool.length);
+  pool = pool.slice(0, count);
+
+  session = {
+    questions: pool.map(item => ({...item, options: buildOptions(item)})),
+    idx: 0,
+    instant: $("instantFb").checked,
+    results: []   // {n, level, lec, q, correct(bool), timeSec, picked, answer}
+  };
+
+  $("start").classList.add("hidden");
+  $("results").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const s = session;
+  const item = s.questions[s.idx];
+
+  // Tags & Fortschritt
+  const lvlNames = {1:"Leicht",2:"Mittel",3:"Schwer"};
+  $("qtags").innerHTML =
+    `<span class="tag lvl lvl${item.level}">Stufe ${item.level} · ${lvlNames[item.level]}</span>`+
+    `<span class="tag">${item.lec}</span>`+
+    `<span class="tag">Frage ${s.idx+1}/${s.questions.length}</span>`;
+  $("progBar").style.width = ((s.idx)/s.questions.length*100) + "%";
+
+  $("qtext").textContent = item.q;
+  $("feedback").innerHTML = "";
+  $("nextBtn").disabled = true;
+  $("nextBtn").textContent = (s.idx === s.questions.length-1) ? "Auswerten" : "Weiter";
+
+  // Antworten
+  const wrap = $("answers");
+  wrap.innerHTML = "";
+  item.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "ans";
+    btn.type = "button";
+    btn.innerHTML = `<span class="letter">${LETTERS[i]}</span><span>${opt.t}</span>`;
+    btn.addEventListener("click", () => pick(i, btn));
+    wrap.appendChild(btn);
+  });
+
+  // Timer starten
+  qStartTime = performance.now();
+  startTick();
+}
+
+function startTick(){
+  stopTick();
+  $("qtimer").textContent = "0,0 s";
+  tickHandle = setInterval(() => {
+    const el = (performance.now()-qStartTime)/1000;
+    $("qtimer").textContent = fmt(el);
+  }, 100);
+}
+function stopTick(){ if(tickHandle){clearInterval(tickHandle); tickHandle=null;} }
+
+function pick(i, btn){
+  const s = session;
+  const item = s.questions[s.idx];
+  const timeSec = (performance.now()-qStartTime)/1000;
+  stopTick();
+  $("qtimer").textContent = fmt(timeSec);
+
+  const chosen = item.options[i];
+  const correct = !!chosen.ok;
+
+  // Auswahl protokollieren
+  s.results.push({
+    n:item.n, level:item.level, lec:item.lec, q:item.q,
+    correct, timeSec,
+    answer: chosen.t,
+    correctAnswer: item.correct
+  });
+
+  // Buttons sperren + markieren
+  const btns = $("answers").querySelectorAll(".ans");
+  btns.forEach((b, j) => {
+    b.disabled = true;
+    if(s.instant){
+      if(item.options[j].ok) b.classList.add("correct");
+      if(j===i && !correct) b.classList.add("wrong");
+    } else if(j===i){
+      b.classList.add(correct ? "correct" : "wrong");
+    }
+  });
+
+  // Feedback
+  if(s.instant){
+    $("feedback").innerHTML = correct
+      ? `<span class="fb-ok">Richtig.</span> <span style="color:var(--grey-5)">(${fmt(timeSec)})</span>`
+      : `<span class="fb-no">Leider falsch.</span> <span style="color:var(--grey-5)">Richtig wäre: ${item.correct}</span>`;
+  } else {
+    $("feedback").innerHTML = `<span style="color:var(--grey-5)">Antwort erfasst (${fmt(timeSec)}).</span>`;
+  }
+
+  $("nextBtn").disabled = false;
+  $("nextBtn").focus();
+}
+
+function next(){
+  const s = session;
+  if(s.idx < s.questions.length-1){
+    s.idx++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+/* ============================================================
+   ERGEBNIS
+   ============================================================ */
+function showResults(){
+  stopTick();
+  const s = session;
+  $("quiz").classList.add("hidden");
+  $("results").classList.remove("hidden");
+  $("progBar").style.width = "100%";
+
+  const total = s.results.length;
+  const right = s.results.filter(r=>r.correct).length;
+  const totalTime = s.results.reduce((a,r)=>a+r.timeSec,0);
+  const pct = total ? Math.round(right/total*100) : 0;
+  const avg = total ? totalTime/total : 0;
+
+  $("scoreHead").textContent = `${right} von ${total} Fragen richtig`;
+  $("sCorrect").textContent = right;
+  $("sPct").innerHTML = pct + "&nbsp;%";
+  $("sTotal").innerHTML = totalTime.toFixed(0) + "&nbsp;s";
+  $("sAvg").innerHTML = avg.toFixed(1).replace(".",",") + "&nbsp;s";
+
+  const lvlNames = {1:"1 · leicht",2:"2 · mittel",3:"3 · schwer"};
+  const tb = $("resultTable").querySelector("tbody");
+  tb.innerHTML = "";
+  s.results.forEach((r, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML =
+      `<td>${i+1}</td>`+
+      `<td>${lvlNames[r.level]}</td>`+
+      `<td>${r.lec}</td>`+
+      `<td class="qcell">${r.q}</td>`+
+      `<td class="c"><span class="dot ${r.correct?'ok':'no'}" title="${r.correct?'richtig':'falsch'}"></span></td>`+
+      `<td class="num">${fmt(r.timeSec)}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function downloadCSV(){
+  const s = session;
+  const sep = ";";
+  const head = ["Nr","Stufe","Lecture","Frage","Antwort_gewaehlt","Richtige_Antwort","Korrekt","Zeit_Sekunden"];
+  const esc = v => `"${String(v).replace(/"/g,'""')}"`;
+  const rows = s.results.map((r,i) => [
+    i+1, r.level, r.lec, r.q, r.answer, r.correctAnswer,
+    r.correct?"ja":"nein", r.timeSec.toFixed(2).replace(".",",")
+  ].map(esc).join(sep));
+
+  const right = s.results.filter(r=>r.correct).length;
+  const totalTime = s.results.reduce((a,r)=>a+r.timeSec,0);
+  const summary = [
+    "", "",
+    `Summe${sep}${esc("Richtig: "+right+" / "+s.results.length)}${sep}${esc("Gesamtzeit (s): "+totalTime.toFixed(2).replace(".",","))}`
+  ];
+
+  const csv = "\uFEFF" + [head.map(esc).join(sep), ...rows, ...summary].join("\r\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const stamp = new Date().toISOString().slice(0,16).replace(/[:T]/g,"-");
+  a.href = url; a.download = `quiz_ergebnis_${stamp}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function resetToStart(){
+  $("results").classList.add("hidden");
+  $("quiz").classList.add("hidden");
+  $("start").classList.remove("hidden");
+  $("progBar").style.width = "0%";
+  updatePoolInfo();
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+$("startBtn").addEventListener("click", startQuiz);
+$("nextBtn").addEventListener("click", next);
+$("retryBtn").addEventListener("click", resetToStart);
+$("csvBtn").addEventListener("click", downloadCSV);
+</script>
+</body>
+</html>
